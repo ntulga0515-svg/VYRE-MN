@@ -17,7 +17,6 @@ const db = new Database("vyre.db");
 
 db.pragma("journal_mode = WAL");
 
-
 db.exec(`
 CREATE TABLE IF NOT EXISTS players (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -55,7 +54,6 @@ const serverCount = db
     .prepare("SELECT COUNT(*) AS count FROM servers")
     .get().count;
 
-
 if (serverCount === 0) {
 
     const insertServer = db.prepare(`
@@ -63,7 +61,6 @@ if (serverCount === 0) {
         (name, type, ip, port, status)
         VALUES (?, ?, ?, ?, ?)
     `);
-
 
     insertServer.run(
         "VYRE DM #1",
@@ -89,7 +86,6 @@ if (serverCount === 0) {
         "offline"
     );
 
-
     insertServer.run(
         "VYRE RETAKE #1",
         "Retake",
@@ -114,7 +110,6 @@ if (serverCount === 0) {
         "offline"
     );
 
-
     for (let i = 1; i <= 20; i++) {
 
         insertServer.run(
@@ -126,7 +121,6 @@ if (serverCount === 0) {
         );
 
     }
-
 }
 
 
@@ -181,7 +175,7 @@ app.use(passport.session());
 
 
 /* =========================================================
-   STATIC
+   STATIC FILES
    ========================================================= */
 
 app.use(
@@ -192,7 +186,7 @@ app.use(
 
 
 /* =========================================================
-   SERIALIZE
+   SERIALIZE USER
    ========================================================= */
 
 passport.serializeUser(
@@ -292,13 +286,11 @@ passport.use(
                     }
                 );
 
-
             } catch (error) {
 
                 return done(error);
 
             }
-
         }
     )
 );
@@ -354,9 +346,9 @@ app.get(
 
         }
 
-
         res.json({
             loggedIn: true,
+
             user: req.user
         });
 
@@ -504,10 +496,10 @@ app.post(
 
             res.json({
                 success: true,
+
                 id:
                     result.lastInsertRowid
             });
-
 
         } catch (error) {
 
@@ -694,6 +686,7 @@ app.post(
 
         res.json({
             success: true,
+
             id:
                 result.lastInsertRowid
         });
@@ -728,7 +721,7 @@ app.delete(
 
 
 /* =========================================================
-   PAGES
+   HOME
    ========================================================= */
 
 app.get(
@@ -748,6 +741,10 @@ app.get(
 );
 
 
+/* =========================================================
+   SERVERS
+   ========================================================= */
+
 app.get(
     "/servers",
 
@@ -764,6 +761,10 @@ app.get(
     }
 );
 
+
+/* =========================================================
+   SKINS
+   ========================================================= */
 
 app.get(
     "/skins",
@@ -782,6 +783,10 @@ app.get(
 );
 
 
+/* =========================================================
+   LEADERBOARD
+   ========================================================= */
+
 app.get(
     "/leaderboard",
 
@@ -798,6 +803,10 @@ app.get(
     }
 );
 
+
+/* =========================================================
+   PLAYERS
+   ========================================================= */
 
 app.get(
     "/players",
@@ -816,6 +825,10 @@ app.get(
 );
 
 
+/* =========================================================
+   CLANS
+   ========================================================= */
+
 app.get(
     "/clans",
 
@@ -832,6 +845,10 @@ app.get(
     }
 );
 
+
+/* =========================================================
+   DISCORD
+   ========================================================= */
 
 app.get(
     "/discord",
@@ -851,8 +868,40 @@ app.get(
 
 
 /* =========================================================
-   PROFILE PAGE
+   PROFILE
    ========================================================= */
+
+/*
+   /profile
+   → logged in user-ийн Steam ID-г аваад
+   /profile/STEAM_ID руу шилжүүлнэ
+*/
+
+app.get(
+    "/profile",
+
+    (req, res) => {
+
+        if (!req.isAuthenticated()) {
+
+            return res.redirect("/");
+
+        }
+
+
+        res.redirect(
+            "/profile/" +
+            req.user.steam_id
+        );
+
+    }
+);
+
+
+/*
+   /profile/STEAM_ID
+   → profile.html харуулна
+*/
 
 app.get(
     "/profile/:steam_id",
@@ -893,7 +942,7 @@ app.get(
 
 
 /* =========================================================
-   START
+   START SERVER
    ========================================================= */
 
 app.listen(
