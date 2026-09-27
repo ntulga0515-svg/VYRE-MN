@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>VYRE.MN — CS2 Community</title>
-
     <link rel="stylesheet" href="/style.css">
 </head>
 
@@ -13,9 +11,375 @@
 
 <div class="bg-glow"></div>
 
-
 <aside class="sidebar">
 
     <div class="brand">
         <span>VYRE</span><b>.MN</b>
     </div>
+
+    <div class="brand-line"></div>
+
+    <nav>
+        <a class="nav-item active" href="/">
+            <span>⌂</span> HOME
+        </a>
+
+        <a class="nav-item" href="/servers">
+            <span>▣</span> SERVERS
+        </a>
+
+        <a class="nav-item" href="/skins">
+            <span>◈</span> SKINCHANGER
+        </a>
+
+        <a class="nav-item" href="/leaderboard">
+            <span>♛</span> LEADERBOARD
+        </a>
+
+        <a class="nav-item" href="/players">
+            <span>◉</span> PLAYERS
+        </a>
+
+        <a class="nav-item" href="/clans">
+            <span>◆</span> CLANS
+        </a>
+
+        <a class="nav-item" href="/discord">
+            <span>◌</span> DISCORD
+        </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <div class="system-status">
+            <i></i>
+            <div>
+                <strong>ALL SYSTEMS</strong>
+                <small>OPERATIONAL</small>
+            </div>
+        </div>
+
+
+        <!-- STEAM LOGGED OUT -->
+
+        <div id="steamDisconnected">
+
+            <button
+                class="steam-login"
+                onclick="steamLogin()"
+            >
+                <span>◉</span>
+                STEAM LOGIN
+            </button>
+
+        </div>
+
+
+        <!-- STEAM LOGGED IN -->
+
+        <div
+            id="steamConnected"
+            style="display:none;"
+        >
+
+            <a
+                id="steamProfileLink"
+                href="/profile"
+                class="steam-login"
+            >
+                <span>◉</span>
+                PROFILE
+            </a>
+
+        </div>
+
+    </div>
+
+</aside>
+
+
+<main class="main">
+
+    <header class="topbar">
+        <div>
+            <span class="top-live"></span>
+            MONGOLIA
+        </div>
+
+        <div>CS2 COMMUNITY</div>
+    </header>
+
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <div class="eyebrow">
+                MONGOLIAN CS2 COMMUNITY
+            </div>
+
+            <h1>
+                PLAY.<br>
+                <span>COMPETE.</span><br>
+                DOMINATE.
+            </h1>
+
+            <p>
+                VYRE.MN is a next generation Counter-Strike 2
+                community built for Mongolian players.
+            </p>
+
+            <div class="hero-buttons">
+
+                <a
+                    href="/servers"
+                    class="primary-btn"
+                >
+                    PLAY NOW →
+                </a>
+
+                <a
+                    href="/skins"
+                    class="secondary-btn"
+                >
+                    SKINCHANGER
+                </a>
+
+            </div>
+
+        </div>
+
+        <div class="hero-mark">
+            <span>V</span>
+        </div>
+
+    </section>
+
+
+    <section class="home-section">
+
+        <div class="section-head">
+
+            <div>
+
+                <div class="eyebrow">
+                    COMMUNITY
+                </div>
+
+                <h2>
+                    VYRE NETWORK
+                </h2>
+
+            </div>
+
+            <a
+                href="/servers"
+                class="view-all"
+            >
+                VIEW SERVERS →
+            </a>
+
+        </div>
+
+
+        <div class="stats-grid">
+
+            <div class="stat-card">
+
+                <span class="stat-number">
+                    26
+                </span>
+
+                <span class="stat-label">
+                    COMMUNITY SERVERS
+                </span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span class="stat-number">
+                    20
+                </span>
+
+                <span class="stat-label">
+                    5V5 MATCH SERVERS
+                </span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span class="stat-number">
+                    03
+                </span>
+
+                <span class="stat-label">
+                    DEATHMATCH
+                </span>
+
+            </div>
+
+
+            <div class="stat-card">
+
+                <span class="stat-number">
+                    03
+                </span>
+
+                <span class="stat-label">
+                    RETAKE
+                </span>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <section class="home-section">
+
+        <div class="section-head">
+
+            <div>
+
+                <div class="eyebrow">
+                    FEATURES
+                </div>
+
+                <h2>
+                    VYRE ECOSYSTEM
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="feature-grid">
+
+            <a
+                href="/servers"
+                class="feature-card"
+            >
+
+                <div class="feature-icon">
+                    ▣
+                </div>
+
+                <h3>
+                    COMMUNITY SERVERS
+                </h3>
+
+                <p>
+                    Join VYRE Deathmatch, Retake and competitive
+                    5v5 servers.
+                </p>
+
+                <span>
+                    EXPLORE →
+                </span>
+
+            </a>
+
+
+            <a
+                href="/skins"
+                class="feature-card"
+            >
+
+                <div class="feature-icon">
+                    ◈
+                </div>
+
+                <h3>
+                    SKINCHANGER
+                </h3>
+
+                <p>
+                    Customize your CS2 loadout with weapons,
+                    knives and gloves.
+                </p>
+
+                <span>
+                    OPEN →
+                </span>
+
+            </a>
+
+
+            <a
+                href="/leaderboard"
+                class="feature-card"
+            >
+
+                <div class="feature-icon">
+                    ♛
+                </div>
+
+                <h3>
+                    LEADERBOARD
+                </h3>
+
+                <p>
+                    Compete with the best players in the VYRE
+                    community.
+                </p>
+
+                <span>
+                    VIEW →
+                </span>
+
+            </a>
+
+
+            <a
+                href="/clans"
+                class="feature-card"
+            >
+
+                <div class="feature-icon">
+                    ◆
+                </div>
+
+                <h3>
+                    CLANS
+                </h3>
+
+                <p>
+                    Create or join a clan and build your team.
+                </p>
+
+                <span>
+                    EXPLORE →
+                </span>
+
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <footer>
+
+        <strong>
+            VYRE<span>.MN</span>
+        </strong>
+
+        <p>
+            © 2026 VYRE.MN — MONGOLIAN CS2 COMMUNITY
+        </p>
+
+    </footer>
+
+</main>
+
+
+<script src="/script.js"></script>
+
+</body>
+</html>
