@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servers — VYRE.MN</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+<div class="bg-glow"></div>
+
+<aside class="sidebar">
+
+    <div class="brand">
+        <span>VYRE</span><b>.MN</b>
+    </div>
+
+    <div class="brand-line"></div>
+
+    <nav>
+        <a class="nav-item" href="/">⌂ HOME</a>
+        <a class="nav-item active" href="/servers">▣ SERVERS</a>
+        <a class="nav-item" href="/skins">◈ SKINCHANGER</a>
+        <a class="nav-item" href="/leaderboard">♛ LEADERBOARD</a>
+        <a class="nav-item" href="/players">◉ PLAYERS</a>
+        <a class="nav-item" href="/clans">◆ CLANS</a>
+        <a class="nav-item" href="/discord">◌ DISCORD</a>
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <div class="system-status">
+            <i></i>
+            <div>
+                <strong>ALL SYSTEMS</strong>
+                <small>OPERATIONAL</small>
+            </div>
+        </div>
+
+        <button class="steam-login" onclick="steamLogin()">
+            ◉ STEAM LOGIN
+        </button>
+
+    </div>
+
+</aside>
+
+
+<main class="main">
+
+<header class="topbar">
+    <div><span class="top-live"></span> MONGOLIA</div>
+    <div>26 SERVERS ONLINE</div>
+</header>
+
+
+<section class="page-header">
+
+    <div class="eyebrow">VYRE NETWORK</div>
+
+    <h1>COMMUNITY<br><span>SERVERS</span></h1>
+
+    <p>
+        Choose your game mode and connect directly to VYRE.MN.
+    </p>
+
+</section>
+
+
+<section class="server-section">
+
+    <div class="server-title">
+        <span>DEATHMATCH</span>
+        <b>03 SERVERS</b>
+    </div>
+
+    <div class="server-grid">
+
+        <div class="server-card">
+            <div class="server-mode">DEATHMATCH</div>
+            <h3>VYRE DM #01</h3>
+            <p>128 TICK • DUST II</p>
+            <div class="server-bottom">
+                <span class="online">● ONLINE</span>
+                <button onclick="connectServer('DM01')">CONNECT →</button>
+            </div>
+        </div>
+
+        <div class="server-card">
+            <div class="server-mode">DEATHMATCH</div>
+            <h3>VYRE DM #02</h3>
+            <p>128 TICK • MIRAGE</p>
+            <div class="server-bottom">
+                <span class="online">● ONLINE</span>
+                <button onclick="connectServer('DM02')">CONNECT →</button>
+            </div>
+        </div>
+
+        <div class="server-card">
+            <div class="server-mode">DEATHMATCH</div>
+            <h3>VYRE DM #03</h3>
+            <p>128 TICK • INFERNO</p>
+            <div class="server-bottom">
+                <span class="online">● ONLINE</span>
+                <button onclick="connectServer('DM03')">CONNECT →</button>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="server-title">
+        <span>RETAKE</span>
+        <b>03 SERVERS</b>
+    </div>
+
+    <div class="server-grid">
+
+        <div class="server-card">
+            <div class="server-mode">RETAKE</div>
+            <h3>VYRE RETAKE #01</h3>
+            <p>128 TICK • ACTIVE</p>
+            <div class="server-bottom">
+                <span class="online">● ONLINE</span>
+                <button onclick="connectServer('RT01')">CONNECT →</button>
+            </div>
+        </div>
+
+        <div class="server-card">
+            <div class="server-mode">RETAKE</div>
+            <h3>VYRE RETAKE #02</h3>
+            <p>128 TICK • ACTIVE</p>
+            <div class="server-bottom">
+                <span class="online">● ONLINE</span>
+                <button onclick="connectServer('RT02')">CONNECT →</button>
+            </div>
+        </div>
+
+        <div class="server-card">
+            <div class="server-mode">RETAKE</div>
+            <h3>VYRE RETAKE #03</h3>
+            <p>128 TICK • ACTIVE</p>
+            <div class="server-bottom">
+                <span class="online">● ONLINE</span>
+                <button onclick="connectServer('RT03')">CONNECT →</button>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="server-title">
+        <span>5V5 MATCH</span>
+        <b>20 SERVERS</b>
+    </div>
+
+    <div class="server-grid">
+
+        <script>
+            for (let i = 1; i <= 20; i++) {
+                const number = String(i).padStart(2, "0");
+
+                document.write(`
+                    <div class="server-card">
+                        <div class="server-mode">5V5 MATCH</div>
+                        <h3>VYRE MATCH #${number}</h3>
+                        <p>128 TICK • COMPETITIVE</p>
+                        <div class="server-bottom">
+                            <span class="online">● ONLINE</span>
+                            <button onclick="connectServer('MATCH${number}')">
+                                CONNECT →
+                            </button>
+                        </div>
+                    </div>
+                `);
+            }
+        </script>
+
+    </div>
+
+</section>
+
+
+<footer>
+    <strong>VYRE<span>.MN</span></strong>
+    <p>© 2026 VYRE.MN — MONGOLIAN CS2 COMMUNITY</p>
+</footer>
+
+</main>
+
+<script src="/script.js"></script>
+
+</body>
+</html>

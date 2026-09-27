@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKINCHANGER — VYRE.MN</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            <div class="brand-mark">V</div>
+            <div>
+                <strong>VYRE</strong>
+                <span>.MN</span>
+            </div>
+        </div>
+
+        <div class="sidebar-label">NAVIGATION</div>
+
+        <nav class="nav">
+            <a href="/" class="nav-item">
+                <span>⌂</span> HOME
+            </a>
+
+            <a href="/servers" class="nav-item">
+                <span>▣</span> SERVERS
+            </a>
+
+            <a href="/skins" class="nav-item active">
+                <span>◈</span> SKINCHANGER
+            </a>
+
+            <a href="/leaderboard" class="nav-item">
+                <span>♛</span> LEADERBOARD
+            </a>
+
+            <a href="/players" class="nav-item">
+                <span>◉</span> PLAYERS
+            </a>
+
+            <a href="/clans" class="nav-item">
+                <span>◆</span> CLANS
+            </a>
+
+            <a href="/discord" class="nav-item">
+                <span>◌</span> DISCORD
+            </a>
+        </nav>
+
+        <div class="sidebar-bottom">
+
+            <div class="sidebar-status">
+                <span class="status-dot"></span>
+                VYRE NETWORK ONLINE
+            </div>
+
+            <button class="steam-login" onclick="steamLogin()">
+                STEAM LOGIN
+                <span>↗</span>
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="topbar-left">
+                <span class="page-location">VYRE.MN</span>
+                <span class="slash">/</span>
+                <span class="page-current">SKINCHANGER</span>
+            </div>
+
+            <div class="topbar-right">
+
+                <div class="network-indicator">
+                    <span></span>
+                    ONLINE
+                </div>
+
+                <button class="top-steam" onclick="steamLogin()">
+                    STEAM LOGIN
+                </button>
+
+            </div>
+
+        </header>
+
+
+        <section class="vyre-skins">
+
+            <div class="skins-heading">
+
+                <div>
+                    <div class="eyebrow">VYRE.MN / LOADOUT</div>
+
+                    <h1>SKINCHANGER</h1>
+
+                    <p>
+                        Customize your Counter-Strike 2 loadout.
+                        Select a weapon to browse its skins.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <!-- MAIN CATEGORY -->
+
+            <div class="skins-tabs">
+
+                <button
+                    class="skins-tab active"
+                    onclick="skinCategory('weapons', this)">
+                    WEAPON SKINS
+                </button>
+
+                <button
+                    class="skins-tab"
+                    onclick="skinCategory('agents', this)">
+                    AGENTS
+                </button>
+
+                <button
+                    class="skins-tab"
+                    onclick="skinCategory('music', this)">
+                    MUSIC KIT
+                </button>
+
+                <button
+                    class="skins-tab"
+                    onclick="skinCategory('coins', this)">
+                    COINS
+                </button>
+
+            </div>
+
+
+            <!-- WEAPON SELECTOR -->
+
+            <div id="weaponArea">
+
+                <div class="skins-toolbar">
+
+                    <div class="weapon-select">
+
+                        <label>WEAPON</label>
+
+                        <select id="weaponSelect" onchange="changeWeapon(this.value)">
+
+                            <option value="AK-47">AK-47</option>
+                            <option value="M4A4">M4A4</option>
+                            <option value="M4A1-S">M4A1-S</option>
+                            <option value="AWP">AWP</option>
+                            <option value="Glock-18">Glock-18</option>
+                            <option value="USP-S">USP-S</option>
+                            <option value="Desert Eagle">Desert Eagle</option>
+                            <option value="P250">P250</option>
+                            <option value="FAMAS">FAMAS</option>
+                            <option value="Galil AR">Galil AR</option>
+                            <option value="AUG">AUG</option>
+                            <option value="SG 553">SG 553</option>
+                            <option value="SSG 08">SSG 08</option>
+                            <option value="SCAR-20">SCAR-20</option>
+                            <option value="G3SG1">G3SG1</option>
+                            <option value="MAC-10">MAC-10</option>
+                            <option value="MP9">MP9</option>
+                            <option value="MP7">MP7</option>
+                            <option value="MP5-SD">MP5-SD</option>
+                            <option value="UMP-45">UMP-45</option>
+                            <option value="P90">P90</option>
+                            <option value="PP-Bizon">PP-Bizon</option>
+                            <option value="Nova">Nova</option>
+                            <option value="XM1014">XM1014</option>
+                            <option value="MAG-7">MAG-7</option>
+                            <option value="Sawed-Off">Sawed-Off</option>
+                            <option value="M249">M249</option>
+                            <option value="Negev">Negev</option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="team-switch">
+
+                        <button
+                            class="team-switch-btn active"
+                            onclick="teamFilter('ALL', this)">
+                            ALL
+                        </button>
+
+                        <button
+                            class="team-switch-btn"
+                            onclick="teamFilter('T', this)">
+                            T
+                        </button>
+
+                        <button
+                            class="team-switch-btn"
+                            onclick="teamFilter('CT', this)">
+                            CT
+                        </button>
+
+                    </div>
+
+
+                    <div class="skin-search">
+
+                        <span>⌕</span>
+
+                        <input
+                            id="skinSearch"
+                            type="text"
+                            placeholder="Search by name..."
+                            oninput="searchSkins()">
+
+                    </div>
+
+                </div>
+
+
+                <!-- SKIN COLLECTION -->
+
+                <div class="collection-title">
+
+                    <div>
+                        <span>SKIN COLLECTION</span>
+                        <strong id="weaponTitle">AK-47</strong>
+                    </div>
+
+                    <small id="skinCount">
+                        0 SKINS
+                    </small>
+
+                </div>
+
+
+                <div
+                    id="skinGrid"
+                    class="mirage-style-grid">
+                </div>
+
+            </div>
+
+
+            <!-- OTHER CATEGORY -->
+
+            <div
+                id="otherArea"
+                class="other-area"
+                style="display:none;">
+
+                <div class="other-header">
+
+                    <span>COLLECTION</span>
+
+                    <h2 id="otherTitle">
+                        AGENTS
+                    </h2>
+
+                </div>
+
+                <div class="other-empty">
+
+                    <div>◈</div>
+
+                    <strong id="otherMessage">
+                        AGENTS COLLECTION
+                    </strong>
+
+                    <p>
+                        Collection will be available here.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- SELECTED -->
+
+            <div class="selected-loadout">
+
+                <div class="selected-title">
+
+                    <div>
+                        <span>SELECTED SKIN</span>
+
+                        <strong id="selectedSkin">
+                            NONE
+                        </strong>
+                    </div>
+
+                    <button onclick="clearSelected()">
+                        CLEAR
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="selectedCard"
+                    class="selected-card">
+
+                    <div class="selected-image">
+                        VYRE
+                    </div>
+
+                    <div class="selected-info">
+
+                        <small>WEAPON</small>
+
+                        <strong id="selectedWeapon">
+                            —
+                        </strong>
+
+                        <small>SKIN</small>
+
+                        <strong id="selectedSkinSmall">
+                            NONE
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STEAM -->
+
+                <div class="steam-loadout">
+
+                    <div class="steam-loadout-header">
+                        STEAM ACCOUNT
+                    </div>
+
+                    <div
+                        id="steamDisconnected"
+                        class="steam-user-row">
+
+                        <div class="steam-circle">
+                            S
+                        </div>
+
+                        <div>
+
+                            <strong>NOT CONNECTED</strong>
+
+                            <small>
+                                Connect Steam to use skins
+                            </small>
+
+                        </div>
+
+                    </div>
+
+
+                    <div
+                        id="steamConnected"
+                        class="steam-user-row"
+                        style="display:none;">
+
+                        <div class="steam-circle">
+                            S
+                        </div>
+
+                        <div>
+
+                            <strong id="steamName">
+                                Steam User
+                            </strong>
+
+                            <small>CONNECTED</small>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        class="steam-connect"
+                        onclick="steamLogin()">
+
+                        CONNECT STEAM
+
+                    </button>
+
+                </div>
+
+
+                <button
+                    class="save-loadout"
+                    onclick="saveLoadout()">
+
+                    SAVE LOADOUT
+                    <span>→</span>
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <footer class="footer">
+
+            <div>
+                <strong>VYRE.MN</strong>
+                <span>CS2 COMMUNITY</span>
+            </div>
+
+            <div>
+                © 2026 VYRE.MN
+            </div>
+
+        </footer>
+
+    </main>
+
+</div>
+
+
+<script src="/script.js"></script>
+
+</body>
+</html>
