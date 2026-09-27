@@ -44,6 +44,12 @@ CREATE TABLE IF NOT EXISTS bans (
     admin_steam_id TEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS loadouts (
+    steam_id TEXT PRIMARY KEY,
+    data TEXT NOT NULL,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
 `);
 
 
@@ -786,6 +792,204 @@ app.delete(
         res.json({
 
             success: true
+
+        });
+
+    }
+);
+
+
+/* =========================================================
+   SKIN LOADOUT
+   ========================================================= */
+
+app.get(
+    "/api/loadout",
+
+    (req, res) => {
+
+        if (
+            !req.isAuthenticated ||
+            !req.isAuthenticated()
+        ) {
+
+            return res.status(401).json({
+
+                message:
+                    "Steam login required"
+
+            });
+
+        }
+
+
+        const row =
+            db.prepare(`
+                SELECT data
+                FROM loadouts
+                WHERE steam_id = ?
+            `).get(
+                req.user.steam_id
+            );
+
+
+        let loadout = {};
+
+
+        try {
+
+            if (row) {
+
+                loadout =
+                    JSON.parse(row.data);
+
+            }
+
+        } catch (error) {
+
+            loadout = {};
+
+        }
+
+
+        res.json({
+
+            loggedIn: true,
+
+            steam_id:
+                req.user.steam_id,
+
+            loadout:
+                loadout
+
+        });
+
+    }
+);
+
+
+app.post(
+    "/api/loadout",
+
+    (req, res) => {
+
+        if (
+            !req.isAuthenticated ||
+            !req.isAuthenticated()
+        ) {
+
+            return res.status(401).json({
+
+                message:
+                    "Steam login required"
+
+            });
+
+        }
+
+
+        const loadout =
+            req.body?.loadout;
+
+
+        if (
+            !loadout ||
+            typeof loadout !== "object"
+        ) {
+
+            return res.status(400).json({
+
+                message:
+                    "Invalid loadout"
+
+            });
+
+        }
+
+
+        const clean = {};
+
+
+        for (
+            const [key, value]
+            of Object.entries(loadout)
+        ) {
+
+            if (
+                !value ||
+                typeof value !== "object"
+            ) {
+
+                continue;
+
+            }
+
+
+            clean[
+                String(key).slice(0, 100)
+            ] = {
+
+                id:
+                    String(
+                        value.id ?? ""
+                    ).slice(0, 200),
+
+                name:
+                    String(
+                        value.name ?? ""
+                    ).slice(0, 300),
+
+                image:
+                    String(
+                        value.image ?? ""
+                    ).slice(0, 1000),
+
+                tab:
+                    String(
+                        value.tab ?? ""
+                    ).slice(0, 50),
+
+                weapon:
+                    String(
+                        value.weapon ?? ""
+                    ).slice(0, 150)
+
+            };
+
+        }
+
+
+        db.prepare(`
+            INSERT INTO loadouts
+            (
+                steam_id,
+                data,
+                updated_at
+            )
+            VALUES
+            (
+                ?,
+                ?,
+                CURRENT_TIMESTAMP
+            )
+
+            ON CONFLICT(steam_id)
+
+            DO UPDATE SET
+                data = excluded.data,
+                updated_at = CURRENT_TIMESTAMP
+        `).run(
+            req.user.steam_id,
+            JSON.stringify(clean)
+        );
+
+
+        res.json({
+
+            success: true,
+
+            loadout:
+                clean
 
         });
 
