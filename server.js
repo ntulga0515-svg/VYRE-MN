@@ -1,393 +1,996 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
-
-    <title>Profile — VYRE.MN</title>
-
-    <link
-        rel="stylesheet"
-        href="/style.css"
-    >
-
-    <style>
-
-        .profile-page {
-            padding: 40px;
-            max-width: 1100px;
-        }
-
-        .profile-card {
-            display: flex;
-            align-items: center;
-            gap: 30px;
-            padding: 35px;
-            border: 1px solid rgba(255,255,255,.08);
-            background: rgba(255,255,255,.025);
-            border-radius: 14px;
-        }
-
-        .profile-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 12px;
-            object-fit: cover;
-            background: #111;
-        }
-
-        .profile-label {
-            font-size: 11px;
-            letter-spacing: 2px;
-            opacity: .5;
-            margin-bottom: 8px;
-        }
-
-        #profileName {
-            margin: 0 0 10px;
-            font-size: 32px;
-        }
-
-        .profile-rank {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 5px;
-            background: rgba(255,255,255,.08);
-            font-size: 12px;
-            letter-spacing: 1px;
-        }
-
-        .profile-steamid {
-            margin-top: 18px;
-            font-size: 12px;
-            opacity: .55;
-        }
-
-        .profile-steamid span {
-            margin-left: 10px;
-            opacity: 1;
-        }
-
-        .profile-sections {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .profile-box {
-            min-width: 180px;
-            padding: 20px;
-            border: 1px solid rgba(255,255,255,.08);
-            background: rgba(255,255,255,.025);
-            border-radius: 10px;
-        }
-
-        .profile-box span {
-            display: block;
-            font-size: 10px;
-            letter-spacing: 2px;
-            opacity: .45;
-            margin-bottom: 8px;
-        }
-
-        .profile-box strong {
-            font-size: 15px;
-        }
-
-    </style>
-
-</head>
-
-
-<body>
-
-<div class="bg-glow"></div>
-
-
-<aside class="sidebar">
-
-    <div class="brand">
-        <span>VYRE</span><b>.MN</b>
-    </div>
-
-    <div class="brand-line"></div>
-
-
-    <nav>
-
-        <a class="nav-item" href="/">
-            <span>⌂</span> HOME
-        </a>
-
-        <a class="nav-item" href="/servers">
-            <span>▣</span> SERVERS
-        </a>
-
-        <a class="nav-item" href="/skins">
-            <span>◈</span> SKINCHANGER
-        </a>
-
-        <a class="nav-item" href="/leaderboard">
-            <span>♛</span> LEADERBOARD
-        </a>
-
-        <a class="nav-item" href="/players">
-            <span>◉</span> PLAYERS
-        </a>
-
-        <a class="nav-item" href="/clans">
-            <span>◆</span> CLANS
-        </a>
-
-        <a class="nav-item" href="/discord">
-            <span>◌</span> DISCORD
-        </a>
-
-        <a class="nav-item active" href="/profile">
-            <span>◉</span> PROFILE
-        </a>
-
-    </nav>
-
-
-    <div class="sidebar-bottom">
-
-        <div class="system-status">
-
-            <i></i>
-
-            <div>
-
-                <strong>
-                    ALL SYSTEMS
-                </strong>
-
-                <small>
-                    OPERATIONAL
-                </small>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</aside>
-
-
-<main class="main">
-
-    <header class="topbar">
-
-        <div>
-
-            <span class="top-live"></span>
-
-            MONGOLIA
-
-        </div>
-
-        <div>
-            CS2 COMMUNITY
-        </div>
-
-    </header>
-
-
-    <section class="profile-page">
-
-        <div class="profile-card">
-
-            <img
-                id="profileAvatar"
-                class="profile-avatar"
-                src=""
-                alt="Steam Avatar"
-            >
-
-
-            <div>
-
-                <div class="profile-label">
-                    STEAM PROFILE
-                </div>
-
-                <h1 id="profileName">
-                    Loading...
-                </h1>
-
-                <div
-                    id="profileRank"
-                    class="profile-rank"
-                >
-                    PLAYER
-                </div>
-
-                <div class="profile-steamid">
-
-                    STEAM ID:
-
-                    <span id="profileSteamId">
-                        -
-                    </span>
-
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="profile-sections">
-
-            <div class="profile-box">
-
-                <span>
-                    STATUS
-                </span>
-
-                <strong>
-                    ONLINE
-                </strong>
-
-            </div>
-
-
-            <div class="profile-box">
-
-                <span>
-                    RANK
-                </span>
-
-                <strong id="profileRankBox">
-                    PLAYER
-                </strong>
-
-            </div>
-
-        </div>
-
-    </section>
-
-</main>
-
-
-<script>
-
-async function loadProfile() {
-
-    const parts =
-        window.location.pathname
-            .split("/");
-
-
-    const steamId =
-        parts[2];
-
-
-    if (!steamId) {
-
-        document.getElementById(
-            "profileName"
-        ).textContent =
-            "PROFILE NOT FOUND";
-
-        return;
-
-    }
-
-
-    try {
-
-        const response =
-            await fetch(
-                "/api/players/" +
-                steamId
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Profile not found"
-            );
-
-        }
-
-
-        const player =
-            await response.json();
-
-
-        document.getElementById(
-            "profileName"
-        ).textContent =
-            player.name ||
-            "Steam Player";
-
-
-        document.getElementById(
-            "profileSteamId"
-        ).textContent =
-            player.steam_id ||
-            steamId;
-
-
-        document.getElementById(
-            "profileRank"
-        ).textContent =
-            player.rank ||
-            "PLAYER";
-
-
-        document.getElementById(
-            "profileRankBox"
-        ).textContent =
-            player.rank ||
-            "PLAYER";
-
-
-        if (player.avatar) {
-
-            document.getElementById(
-                "profileAvatar"
-            ).src =
-                player.avatar;
-
-        } else {
-
-            document.getElementById(
-                "profileAvatar"
-            ).src =
-                "https://avatars.cloudflare.steamstatic.com/";
-        }
-
-
-    } catch (error) {
-
-        console.error(error);
-
-        document.getElementById(
-            "profileName"
-        ).textContent =
-            "PROFILE NOT FOUND";
-
-    }
-
+const express = require("express");
+const path = require("path");
+const Database = require("better-sqlite3");
+const session = require("express-session");
+const passport = require("passport");
+const SteamStrategy = require("passport-steam").Strategy;
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+
+/* =========================================================
+   DATABASE
+   ========================================================= */
+
+const db = new Database("vyre.db");
+
+db.pragma("journal_mode = WAL");
+
+db.exec(`
+CREATE TABLE IF NOT EXISTS players (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    steam_id TEXT UNIQUE,
+    name TEXT NOT NULL,
+    avatar TEXT,
+    rank TEXT DEFAULT 'PLAYER',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS servers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    type TEXT NOT NULL,
+    ip TEXT,
+    port INTEGER,
+    status TEXT DEFAULT 'offline'
+);
+
+CREATE TABLE IF NOT EXISTS bans (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    steam_id TEXT NOT NULL,
+    name TEXT,
+    reason TEXT,
+    admin_steam_id TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+`);
+
+
+/* =========================================================
+   DATABASE MIGRATION
+   ========================================================= */
+
+try {
+    db.prepare("ALTER TABLE players ADD COLUMN avatar TEXT").run();
+} catch (error) {
+    // avatar column already exists
 }
 
 
-loadProfile();
+/* =========================================================
+   SEED SERVERS
+   ========================================================= */
 
-</script>
+const serverCount = db
+    .prepare("SELECT COUNT(*) AS count FROM servers")
+    .get().count;
+
+if (serverCount === 0) {
+
+    const insertServer = db.prepare(`
+        INSERT INTO servers
+        (name, type, ip, port, status)
+        VALUES (?, ?, ?, ?, ?)
+    `);
+
+    insertServer.run(
+        "VYRE DM #1",
+        "Deathmatch",
+        "vyre-mn.onrender.com",
+        27016,
+        "offline"
+    );
+
+    insertServer.run(
+        "VYRE DM #2",
+        "Deathmatch",
+        "vyre-mn.onrender.com",
+        27017,
+        "offline"
+    );
+
+    insertServer.run(
+        "VYRE DM #3",
+        "Deathmatch",
+        "vyre-mn.onrender.com",
+        27018,
+        "offline"
+    );
+
+    insertServer.run(
+        "VYRE RETAKE #1",
+        "Retake",
+        "vyre-mn.onrender.com",
+        27021,
+        "offline"
+    );
+
+    insertServer.run(
+        "VYRE RETAKE #2",
+        "Retake",
+        "vyre-mn.onrender.com",
+        27022,
+        "offline"
+    );
+
+    insertServer.run(
+        "VYRE RETAKE #3",
+        "Retake",
+        "vyre-mn.onrender.com",
+        27023,
+        "offline"
+    );
+
+    for (let i = 1; i <= 20; i++) {
+
+        insertServer.run(
+            `VYRE 5V5 #${i}`,
+            "5v5",
+            "vyre-mn.onrender.com",
+            27100 + i,
+            "offline"
+        );
+
+    }
+}
 
 
-</body>
+/* =========================================================
+   MIDDLEWARE
+   ========================================================= */
 
-</html>
+app.use(express.json());
+
+app.use(
+    express.urlencoded({
+        extended: true
+    })
+);
+
+
+/* =========================================================
+   SESSION
+   ========================================================= */
+
+app.set("trust proxy", 1);
+
+app.use(
+    session({
+        secret:
+            process.env.SESSION_SECRET ||
+            "vyre-mn-change-this-secret",
+
+        resave: false,
+
+        saveUninitialized: false,
+
+        cookie: {
+            secure:
+                process.env.NODE_ENV === "production",
+
+            httpOnly: true,
+
+            maxAge:
+                7 * 24 * 60 * 60 * 1000
+        }
+    })
+);
+
+
+/* =========================================================
+   PASSPORT
+   ========================================================= */
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+/* =========================================================
+   STATIC
+   ========================================================= */
+
+app.use(
+    express.static(
+        path.join(__dirname, "public")
+    )
+);
+
+
+/* =========================================================
+   SERIALIZE
+   ========================================================= */
+
+passport.serializeUser(
+    (user, done) => {
+        done(null, user);
+    }
+);
+
+passport.deserializeUser(
+    (user, done) => {
+        done(null, user);
+    }
+);
+
+
+/* =========================================================
+   STEAM AUTH
+   ========================================================= */
+
+passport.use(
+    new SteamStrategy(
+        {
+            returnURL:
+                "https://vyre-mn.onrender.com/api/auth/steam/return",
+
+            realm:
+                "https://vyre-mn.onrender.com/",
+
+            apiKey:
+                process.env.STEAM_API_KEY
+        },
+
+        (identifier, profile, done) => {
+
+            try {
+
+                const steamId =
+                    profile.id;
+
+                const name =
+                    profile.displayName ||
+                    "Steam Player";
+
+
+                /* STEAM AVATAR */
+
+                let avatar = null;
+
+                if (
+                    profile.photos &&
+                    profile.photos.length > 0
+                ) {
+
+                    avatar =
+                        profile.photos[
+                            profile.photos.length - 1
+                        ].value;
+
+                }
+
+
+                /* FIND PLAYER */
+
+                const existing =
+                    db.prepare(`
+                        SELECT *
+                        FROM players
+                        WHERE steam_id = ?
+                    `).get(steamId);
+
+
+                /* CREATE PLAYER */
+
+                if (!existing) {
+
+                    db.prepare(`
+                        INSERT INTO players
+                        (steam_id, name, avatar)
+                        VALUES (?, ?, ?)
+                    `).run(
+                        steamId,
+                        name,
+                        avatar
+                    );
+
+                }
+
+                /* UPDATE PLAYER */
+
+                else {
+
+                    db.prepare(`
+                        UPDATE players
+                        SET
+                            name = ?,
+                            avatar = ?
+                        WHERE steam_id = ?
+                    `).run(
+                        name,
+                        avatar,
+                        steamId
+                    );
+
+                }
+
+
+                return done(
+                    null,
+                    {
+                        steam_id:
+                            steamId,
+
+                        name:
+                            name,
+
+                        avatar:
+                            avatar
+                    }
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "STEAM AUTH ERROR:",
+                    error
+                );
+
+                return done(error);
+
+            }
+
+        }
+    )
+);
+
+
+/* =========================================================
+   STEAM LOGIN
+   ========================================================= */
+
+app.get(
+    "/api/auth/steam",
+
+    passport.authenticate("steam")
+);
+
+
+/* =========================================================
+   STEAM CALLBACK
+   ========================================================= */
+
+app.get(
+    "/api/auth/steam/return",
+
+    passport.authenticate(
+        "steam",
+        {
+            failureRedirect: "/"
+        }
+    ),
+
+    (req, res) => {
+
+        res.redirect("/");
+
+    }
+);
+
+
+/* =========================================================
+   CURRENT USER
+   ========================================================= */
+
+app.get(
+    "/api/auth/me",
+
+    (req, res) => {
+
+        if (!req.isAuthenticated()) {
+
+            return res.json({
+                loggedIn: false
+            });
+
+        }
+
+
+        res.json({
+
+            loggedIn: true,
+
+            user: req.user
+
+        });
+
+    }
+);
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
+
+app.get(
+    "/api/auth/logout",
+
+    (req, res) => {
+
+        req.logout(() => {
+
+            req.session.destroy(() => {
+
+                res.redirect("/");
+
+            });
+
+        });
+
+    }
+);
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+app.get(
+    "/api/status",
+
+    (req, res) => {
+
+        res.json({
+
+            online: true,
+
+            name: "VYRE.MN",
+
+            time:
+                new Date().toISOString()
+
+        });
+
+    }
+);
+
+
+/* =========================================================
+   PLAYERS
+   ========================================================= */
+
+app.get(
+    "/api/players",
+
+    (req, res) => {
+
+        const players =
+            db.prepare(`
+                SELECT *
+                FROM players
+                ORDER BY id DESC
+            `).all();
+
+        res.json(players);
+
+    }
+);
+
+
+/* =========================================================
+   SINGLE PLAYER
+   ========================================================= */
+
+app.get(
+    "/api/players/:steam_id",
+
+    (req, res) => {
+
+        const player =
+            db.prepare(`
+                SELECT *
+                FROM players
+                WHERE steam_id = ?
+            `).get(
+                req.params.steam_id
+            );
+
+
+        if (!player) {
+
+            return res.status(404).json({
+
+                error:
+                    "Player not found"
+
+            });
+
+        }
+
+
+        res.json(player);
+
+    }
+);
+
+
+/* =========================================================
+   ADD PLAYER
+   ========================================================= */
+
+app.post(
+    "/api/players",
+
+    (req, res) => {
+
+        const {
+            steam_id,
+            name,
+            avatar,
+            rank
+        } = req.body;
+
+
+        if (!steam_id || !name) {
+
+            return res.status(400).json({
+
+                error:
+                    "steam_id and name are required"
+
+            });
+
+        }
+
+
+        try {
+
+            const result =
+                db.prepare(`
+                    INSERT INTO players
+                    (steam_id, name, avatar, rank)
+                    VALUES (?, ?, ?, ?)
+                `).run(
+                    steam_id,
+                    name,
+                    avatar || null,
+                    rank || "PLAYER"
+                );
+
+
+            res.json({
+
+                success: true,
+
+                id:
+                    result.lastInsertRowid
+
+            });
+
+        } catch (error) {
+
+            res.status(400).json({
+
+                error:
+                    error.message
+
+            });
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   UPDATE RANK
+   ========================================================= */
+
+app.post(
+    "/api/players/rank",
+
+    (req, res) => {
+
+        const {
+            steam_id,
+            rank
+        } = req.body;
+
+
+        if (!steam_id || !rank) {
+
+            return res.status(400).json({
+
+                error:
+                    "steam_id and rank are required"
+
+            });
+
+        }
+
+
+        db.prepare(`
+            UPDATE players
+            SET rank = ?
+            WHERE steam_id = ?
+        `).run(
+            rank,
+            steam_id
+        );
+
+
+        res.json({
+
+            success: true
+
+        });
+
+    }
+);
+
+
+/* =========================================================
+   SERVERS
+   ========================================================= */
+
+app.get(
+    "/api/servers",
+
+    (req, res) => {
+
+        const servers =
+            db.prepare(`
+                SELECT *
+                FROM servers
+                ORDER BY id ASC
+            `).all();
+
+        res.json(servers);
+
+    }
+);
+
+
+/* =========================================================
+   SERVER STATUS
+   ========================================================= */
+
+app.post(
+    "/api/servers/status",
+
+    (req, res) => {
+
+        const {
+            id,
+            status
+        } = req.body;
+
+
+        if (!id || !status) {
+
+            return res.status(400).json({
+
+                error:
+                    "id and status are required"
+
+            });
+
+        }
+
+
+        db.prepare(`
+            UPDATE servers
+            SET status = ?
+            WHERE id = ?
+        `).run(
+            status,
+            id
+        );
+
+
+        res.json({
+
+            success: true
+
+        });
+
+    }
+);
+
+
+/* =========================================================
+   BANS
+   ========================================================= */
+
+app.get(
+    "/api/bans",
+
+    (req, res) => {
+
+        const bans =
+            db.prepare(`
+                SELECT *
+                FROM bans
+                ORDER BY created_at DESC
+            `).all();
+
+        res.json(bans);
+
+    }
+);
+
+
+/* =========================================================
+   ADD BAN
+   ========================================================= */
+
+app.post(
+    "/api/bans",
+
+    (req, res) => {
+
+        const {
+            steam_id,
+            name,
+            reason,
+            admin_steam_id
+        } = req.body;
+
+
+        if (!steam_id) {
+
+            return res.status(400).json({
+
+                error:
+                    "steam_id is required"
+
+            });
+
+        }
+
+
+        const result =
+            db.prepare(`
+                INSERT INTO bans
+                (steam_id, name, reason, admin_steam_id)
+                VALUES (?, ?, ?, ?)
+            `).run(
+                steam_id,
+                name || null,
+                reason || null,
+                admin_steam_id || null
+            );
+
+
+        res.json({
+
+            success: true,
+
+            id:
+                result.lastInsertRowid
+
+        });
+
+    }
+);
+
+
+/* =========================================================
+   DELETE BAN
+   ========================================================= */
+
+app.delete(
+    "/api/bans/:steam_id",
+
+    (req, res) => {
+
+        db.prepare(`
+            DELETE FROM bans
+            WHERE steam_id = ?
+        `).run(
+            req.params.steam_id
+        );
+
+
+        res.json({
+
+            success: true
+
+        });
+
+    }
+);
+
+
+/* =========================================================
+   PAGES
+   ========================================================= */
+
+app.get(
+    "/",
+
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "public",
+                "index.html"
+            )
+        );
+
+    }
+);
+
+
+app.get(
+    "/servers",
+
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "public",
+                "servers.html"
+            )
+        );
+
+    }
+);
+
+
+app.get(
+    "/skins",
+
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "public",
+                "skins.html"
+            )
+        );
+
+    }
+);
+
+
+app.get(
+    "/leaderboard",
+
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "public",
+                "leaderboard.html"
+            )
+        );
+
+    }
+);
+
+
+app.get(
+    "/players",
+
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "public",
+                "players.html"
+            )
+        );
+
+    }
+);
+
+
+app.get(
+    "/clans",
+
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "public",
+                "clans.html"
+            )
+        );
+
+    }
+);
+
+
+app.get(
+    "/discord",
+
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "public",
+                "discord.html"
+            )
+        );
+
+    }
+);
+
+
+/* =========================================================
+   PROFILE
+   ========================================================= */
+
+app.get(
+    "/profile",
+
+    (req, res) => {
+
+        if (!req.isAuthenticated()) {
+
+            return res.redirect("/");
+
+        }
+
+
+        res.redirect(
+            "/profile/" +
+            req.user.steam_id
+        );
+
+    }
+);
+
+
+app.get(
+    "/profile/:steam_id",
+
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "public",
+                "profile.html"
+            )
+        );
+
+    }
+);
+
+
+/* =========================================================
+   ADMIN
+   ========================================================= */
+
+app.get(
+    "/admin",
+
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "public",
+                "admin.html"
+            )
+        );
+
+    }
+);
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+app.listen(
+    PORT,
+
+    () => {
+
+        console.log(
+            `VYRE.MN running on port ${PORT}`
+        );
+
+    }
+);
