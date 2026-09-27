@@ -6,15 +6,18 @@ const passport = require("passport");
 const SteamStrategy = require("passport-steam").Strategy;
 
 const app = express();
+
 const PORT = process.env.PORT || 3000;
 
-// =========================
-// DATABASE
-// =========================
+
+/* =========================================================
+   DATABASE
+   ========================================================= */
 
 const db = new Database("vyre.db");
 
 db.pragma("journal_mode = WAL");
+
 
 db.exec(`
 CREATE TABLE IF NOT EXISTS players (
@@ -44,89 +47,162 @@ CREATE TABLE IF NOT EXISTS bans (
 );
 `);
 
-// =========================
-// DEFAULT SERVERS
-// =========================
 
-const serverCount = db
-    .prepare("SELECT COUNT(*) AS count FROM servers")
-    .get();
+/* =========================================================
+   SEED SERVERS
+   ========================================================= */
 
-if (serverCount.count === 0) {
+const serverCount =
+    db.prepare(`
+        SELECT COUNT(*) AS count
+        FROM servers
+    `).get().count;
 
-    const insertServer = db.prepare(`
-        INSERT INTO servers
-        (name, type, ip, port, status)
-        VALUES (?, ?, ?, ?, ?)
-    `);
 
-    // Deathmatch
-    for (let i = 1; i <= 3; i++) {
+if (serverCount === 0) {
 
-        insertServer.run(
-            `VYRE.MN DM #${i}`,
-            "Deathmatch",
-            "127.0.0.1",
-            27015 + i,
-            "offline"
-        );
+    const insertServer =
+        db.prepare(`
+            INSERT INTO servers
+            (name, type, ip, port, status)
+            VALUES (?, ?, ?, ?, ?)
+        `);
 
-    }
 
-    // Retake
-    for (let i = 1; i <= 3; i++) {
+    /* DEATHMATCH */
 
-        insertServer.run(
-            `VYRE.MN Retake #${i}`,
-            "Retake",
-            "127.0.0.1",
-            27020 + i,
-            "offline"
-        );
+    insertServer.run(
+        "VYRE DM #1",
+        "Deathmatch",
+        "vyre-mn.onrender.com",
+        27016,
+        "offline"
+    );
 
-    }
+    insertServer.run(
+        "VYRE DM #2",
+        "Deathmatch",
+        "vyre-mn.onrender.com",
+        27017,
+        "offline"
+    );
 
-    // 5v5
+    insertServer.run(
+        "VYRE DM #3",
+        "Deathmatch",
+        "vyre-mn.onrender.com",
+        27018,
+        "offline"
+    );
+
+
+    /* RETAKE */
+
+    insertServer.run(
+        "VYRE RETAKE #1",
+        "Retake",
+        "vyre-mn.onrender.com",
+        27021,
+        "offline"
+    );
+
+    insertServer.run(
+        "VYRE RETAKE #2",
+        "Retake",
+        "vyre-mn.onrender.com",
+        27022,
+        "offline"
+    );
+
+    insertServer.run(
+        "VYRE RETAKE #3",
+        "Retake",
+        "vyre-mn.onrender.com",
+        27023,
+        "offline"
+    );
+
+
+    /* 5V5 */
+
     for (let i = 1; i <= 20; i++) {
 
         insertServer.run(
-            `VYRE.MN 5v5 #${String(i).padStart(2, "0")}`,
+            `VYRE 5V5 #${i}`,
             "5v5",
-            "127.0.0.1",
+            "vyre-mn.onrender.com",
             27100 + i,
             "offline"
         );
 
     }
+
 }
 
-// =========================
-// MIDDLEWARE
-// =========================
+
+/* =========================================================
+   MIDDLEWARE
+   ========================================================= */
 
 app.use(express.json());
-app.use(express.urlencoded({
-    extended: true
-}));
 
-app.use(session({
-    secret:
-        process.env.SESSION_SECRET ||
-        "vyre-mn-change-this-secret",
+app.use(
+    express.urlencoded({
+        extended: true
+    })
+);
 
-    resave: false,
 
-    saveUninitialized: false,
+/* =========================================================
+   SESSION
+   ========================================================= */
 
-    cookie: {
-        secure: false,
-        httpOnly: true,
-        maxAge: 7 * 24 * 60 * 60 * 1000
-    }
-}));
+app.set("trust proxy", 1);
 
-app.use(passport.initialize());
-app.use(passport.session());
+
+app.use(
+    session({
+
+        secret:
+            process.env.SESSION_SECRET ||
+            "vyre-mn-change-this-secret",
+
+        resave: false,
+
+        saveUninitialized: false,
+
+        cookie: {
+
+            secure:
+                process.env.NODE_ENV === "production",
+
+            httpOnly: true,
+
+            maxAge:
+                7 * 24 * 60 * 60 * 1000
+
+        }
+
+    })
+);
+
+
+/* =========================================================
+   PASSPORT
+   ========================================================= */
+
+app.use(
+    passport.initialize()
+);
+
+app.use(
+    passport.session()
+);
+
+
+/* =========================================================
+   STATIC FILES
+   ========================================================= */
 
 app.use(
     express.static(
@@ -134,66 +210,84 @@ app.use(
     )
 );
 
-// =========================
-// STEAM LOGIN
-// =========================
 
-passport.serializeUser((user, done) => {
+/* =========================================================
+   STEAM SERIALIZE
+   ========================================================= */
 
-    done(null, user);
+passport.serializeUser(
+    (user, done) => {
 
-});
+        done(null, user);
 
-passport.deserializeUser((user, done) => {
+    }
+);
 
-    done(null, user);
 
-});
+passport.deserializeUser(
+    (user, done) => {
 
+        done(null, user);
+
+    }
+);
+
+
+/* =========================================================
+   STEAM AUTH
+   ========================================================= */
 
 passport.use(
     new SteamStrategy(
+
         {
 
             returnURL:
-                process.env.STEAM_RETURN_URL ||
-                "http://localhost:3000/api/auth/steam/return",
+                "https://vyre-mn.onrender.com/api/auth/steam/return",
 
             realm:
-                process.env.STEAM_REALM ||
-                "http://localhost:3000/",
+                "https://vyre-mn.onrender.com/",
 
             apiKey:
                 process.env.STEAM_API_KEY
 
         },
 
-        (identifier, profile, done) => {
+
+        (
+            identifier,
+            profile,
+            done
+        ) => {
 
             try {
 
-                const steamId = profile.id;
+                const steamId =
+                    profile.id;
+
 
                 const name =
                     profile.displayName ||
                     "Steam Player";
+
 
                 const avatar =
                     profile.photos &&
                     profile.photos.length
                         ? profile.photos[
                             profile.photos.length - 1
-                        ].value
+                          ].value
                         : null;
 
 
-                const existing = db
-                    .prepare(`
+                const existing =
+                    db.prepare(`
                         SELECT *
                         FROM players
                         WHERE steam_id = ?
-                    `)
-                    .get(steamId);
+                    `).get(
+                        steamId
+                    );
 
 
                 if (!existing) {
@@ -221,62 +315,86 @@ passport.use(
                 }
 
 
-                return done(null, {
+                return done(
+                    null,
+                    {
 
-                    steam_id: steamId,
+                        steam_id:
+                            steamId,
 
-                    name: name,
+                        name:
+                            name,
 
-                    avatar: avatar
+                        avatar:
+                            avatar
 
-                });
+                    }
+                );
+
 
             } catch (error) {
 
-                return done(error);
+                return done(
+                    error
+                );
 
             }
 
         }
+
     )
 );
 
 
-// =========================
-// STEAM LOGIN ROUTES
-// =========================
+/* =========================================================
+   STEAM LOGIN
+   ========================================================= */
 
 app.get(
     "/api/auth/steam",
 
-    passport.authenticate("steam")
+    passport.authenticate(
+        "steam"
+    )
+
 );
 
+
+/* =========================================================
+   STEAM CALLBACK
+   ========================================================= */
 
 app.get(
     "/api/auth/steam/return",
 
-    passport.authenticate("steam", {
-        failureRedirect: "/"
-    }),
+    passport.authenticate(
+        "steam",
+        {
+            failureRedirect: "/"
+        }
+    ),
 
     (req, res) => {
 
         res.redirect("/");
 
     }
+
 );
 
 
-// =========================
-// CURRENT USER
-// =========================
+/* =========================================================
+   CURRENT USER
+   ========================================================= */
 
 app.get(
     "/api/auth/me",
+
     (req, res) => {
 
-        if (!req.isAuthenticated()) {
+        if (
+            !req.isAuthenticated()
+        ) {
 
             return res.json({
                 loggedIn: false
@@ -294,94 +412,109 @@ app.get(
         });
 
     }
+
 );
 
 
-// =========================
-// LOGOUT
-// =========================
+/* =========================================================
+   LOGOUT
+   ========================================================= */
 
 app.get(
     "/api/auth/logout",
+
     (req, res) => {
 
-        req.logout(() => {
+        req.logout(
+            () => {
 
-            req.session.destroy(() => {
+                req.session.destroy(
+                    () => {
 
-                res.redirect("/");
+                        res.redirect("/");
 
-            });
+                    }
+                );
 
-        });
+            }
+        );
 
     }
+
 );
 
 
-// =========================
-// API STATUS
-// =========================
+/* =========================================================
+   STATUS
+   ========================================================= */
 
 app.get(
     "/api/status",
+
     (req, res) => {
-
-        const servers = db
-            .prepare(
-                "SELECT * FROM servers"
-            )
-            .all();
-
 
         res.json({
 
+            online: true,
+
             name: "VYRE.MN",
 
-            status: "online",
-
-            servers: servers.length
+            time:
+                new Date().toISOString()
 
         });
 
     }
+
 );
 
 
-// =========================
-// PLAYERS
-// =========================
+/* =========================================================
+   PLAYERS
+   ========================================================= */
 
 app.get(
     "/api/players",
+
     (req, res) => {
 
-        const players = db
-            .prepare(`
+        const players =
+            db.prepare(`
                 SELECT *
                 FROM players
                 ORDER BY id DESC
-            `)
-            .all();
+            `).all();
 
 
-        res.json(players);
+        res.json(
+            players
+        );
 
     }
+
 );
 
 
+/* =========================================================
+   ADD PLAYER
+   ========================================================= */
+
 app.post(
     "/api/players",
+
     (req, res) => {
 
         const {
             steam_id,
-            name
+            name,
+            rank
         } = req.body;
 
 
-        if (!steam_id || !name) {
+        if (
+            !steam_id ||
+            !name
+        ) {
 
             return res.status(400).json({
 
@@ -395,15 +528,20 @@ app.post(
 
         try {
 
-            const result = db
-                .prepare(`
+            const result =
+                db.prepare(`
                     INSERT INTO players
-                    (steam_id, name)
-                    VALUES (?, ?)
-                `)
-                .run(
+                    (steam_id, name, rank)
+                    VALUES (?, ?, ?)
+                `).run(
+
                     steam_id,
-                    name
+
+                    name,
+
+                    rank ||
+                    "PLAYER"
+
                 );
 
 
@@ -411,31 +549,35 @@ app.post(
 
                 success: true,
 
-                id: result.lastInsertRowid
+                id:
+                    result.lastInsertRowid
 
             });
+
 
         } catch (error) {
 
             res.status(400).json({
 
                 error:
-                    "Player already exists"
+                    error.message
 
             });
 
         }
 
     }
+
 );
 
 
-// =========================
-// CHANGE RANK
-// =========================
+/* =========================================================
+   UPDATE PLAYER RANK
+   ========================================================= */
 
 app.post(
     "/api/players/rank",
+
     (req, res) => {
 
         const {
@@ -444,151 +586,32 @@ app.post(
         } = req.body;
 
 
-        const allowedRanks = [
-
-            "PLAYER",
-
-            "VIP",
-
-            "ADMIN",
-
-            "BOSS"
-
-        ];
-
-
-        if (!allowedRanks.includes(rank)) {
+        if (
+            !steam_id ||
+            !rank
+        ) {
 
             return res.status(400).json({
 
                 error:
-                    "Invalid rank"
+                    "steam_id and rank are required"
 
             });
 
         }
 
 
-        const result = db
-            .prepare(`
-                UPDATE players
-                SET rank = ?
-                WHERE steam_id = ?
-            `)
-            .run(
-                rank,
-                steam_id
-            );
+        db.prepare(`
+            UPDATE players
+            SET rank = ?
+            WHERE steam_id = ?
+        `).run(
 
+            rank,
 
-        if (result.changes === 0) {
+            steam_id
 
-            return res.status(404).json({
-
-                error:
-                    "Player not found"
-
-            });
-
-        }
-
-
-        res.json({
-
-            success: true,
-
-            steam_id,
-
-            rank
-
-        });
-
-    }
-);
-
-
-// =========================
-// SERVERS
-// =========================
-
-app.get(
-    "/api/servers",
-    (req, res) => {
-
-        const servers = db
-            .prepare(`
-                SELECT *
-                FROM servers
-                ORDER BY id ASC
-            `)
-            .all();
-
-
-        res.json(servers);
-
-    }
-);
-
-
-// =========================
-// SERVER STATUS
-// =========================
-
-app.post(
-    "/api/servers/status",
-    (req, res) => {
-
-        const {
-            id,
-            status
-        } = req.body;
-
-
-        const allowedStatus = [
-
-            "online",
-
-            "offline",
-
-            "maintenance"
-
-        ];
-
-
-        if (!allowedStatus.includes(status)) {
-
-            return res.status(400).json({
-
-                error:
-                    "Invalid server status"
-
-            });
-
-        }
-
-
-        const result = db
-            .prepare(`
-                UPDATE servers
-                SET status = ?
-                WHERE id = ?
-            `)
-            .run(
-                status,
-                id
-            );
-
-
-        if (result.changes === 0) {
-
-            return res.status(404).json({
-
-                error:
-                    "Server not found"
-
-            });
-
-        }
+        );
 
 
         res.json({
@@ -598,34 +621,123 @@ app.post(
         });
 
     }
+
 );
 
 
-// =========================
-// BANS
-// =========================
+/* =========================================================
+   SERVERS
+   ========================================================= */
+
+app.get(
+    "/api/servers",
+
+    (req, res) => {
+
+        const servers =
+            db.prepare(`
+                SELECT *
+                FROM servers
+                ORDER BY id ASC
+            `).all();
+
+
+        res.json(
+            servers
+        );
+
+    }
+
+);
+
+
+/* =========================================================
+   SERVER STATUS
+   ========================================================= */
+
+app.post(
+    "/api/servers/status",
+
+    (req, res) => {
+
+        const {
+            id,
+            status
+        } = req.body;
+
+
+        if (
+            !id ||
+            !status
+        ) {
+
+            return res.status(400).json({
+
+                error:
+                    "id and status are required"
+
+            });
+
+        }
+
+
+        db.prepare(`
+            UPDATE servers
+            SET status = ?
+            WHERE id = ?
+        `).run(
+
+            status,
+
+            id
+
+        );
+
+
+        res.json({
+
+            success: true
+
+        });
+
+    }
+
+);
+
+
+/* =========================================================
+   BANS
+   ========================================================= */
 
 app.get(
     "/api/bans",
+
     (req, res) => {
 
-        const bans = db
-            .prepare(`
+        const bans =
+            db.prepare(`
                 SELECT *
                 FROM bans
-                ORDER BY id DESC
-            `)
-            .all();
+                ORDER BY created_at DESC
+            `).all();
 
 
-        res.json(bans);
+        res.json(
+            bans
+        );
 
     }
+
 );
 
 
+/* =========================================================
+   ADD BAN
+   ========================================================= */
+
 app.post(
     "/api/bans",
+
     (req, res) => {
 
         const {
@@ -636,7 +748,9 @@ app.post(
         } = req.body;
 
 
-        if (!steam_id) {
+        if (
+            !steam_id
+        ) {
 
             return res.status(400).json({
 
@@ -648,26 +762,23 @@ app.post(
         }
 
 
-        const result = db
-            .prepare(`
+        const result =
+            db.prepare(`
                 INSERT INTO bans
-                (
-                    steam_id,
-                    name,
-                    reason,
-                    admin_steam_id
-                )
+                (steam_id, name, reason, admin_steam_id)
                 VALUES (?, ?, ?, ?)
-            `)
-            .run(
+            `).run(
 
                 steam_id,
 
-                name || "",
+                name ||
+                null,
 
-                reason || "",
+                reason ||
+                null,
 
-                admin_steam_id || ""
+                admin_steam_id ||
+                null
 
             );
 
@@ -676,49 +787,53 @@ app.post(
 
             success: true,
 
-            id: result.lastInsertRowid
+            id:
+                result.lastInsertRowid
 
         });
 
     }
+
 );
 
 
-// =========================
-// UNBAN
-// =========================
+/* =========================================================
+   DELETE BAN
+   ========================================================= */
 
 app.delete(
     "/api/bans/:steam_id",
+
     (req, res) => {
 
-        const result = db
-            .prepare(`
-                DELETE FROM bans
-                WHERE steam_id = ?
-            `)
-            .run(
-                req.params.steam_id
-            );
+        db.prepare(`
+            DELETE FROM bans
+            WHERE steam_id = ?
+        `).run(
+
+            req.params.steam_id
+
+        );
 
 
         res.json({
 
-            success:
-                result.changes > 0
+            success: true
 
         });
 
     }
+
 );
 
 
-// =========================
-// PAGES
-// =========================
+/* =========================================================
+   PAGE ROUTES
+   ========================================================= */
 
 app.get(
     "/",
+
     (req, res) => {
 
         res.sendFile(
@@ -730,11 +845,13 @@ app.get(
         );
 
     }
+
 );
 
 
 app.get(
     "/servers",
+
     (req, res) => {
 
         res.sendFile(
@@ -746,11 +863,13 @@ app.get(
         );
 
     }
+
 );
 
 
 app.get(
     "/skins",
+
     (req, res) => {
 
         res.sendFile(
@@ -762,11 +881,13 @@ app.get(
         );
 
     }
+
 );
 
 
 app.get(
     "/leaderboard",
+
     (req, res) => {
 
         res.sendFile(
@@ -778,11 +899,13 @@ app.get(
         );
 
     }
+
 );
 
 
 app.get(
     "/players",
+
     (req, res) => {
 
         res.sendFile(
@@ -794,11 +917,13 @@ app.get(
         );
 
     }
+
 );
 
 
 app.get(
     "/clans",
+
     (req, res) => {
 
         res.sendFile(
@@ -810,11 +935,13 @@ app.get(
         );
 
     }
+
 );
 
 
 app.get(
     "/discord",
+
     (req, res) => {
 
         res.sendFile(
@@ -826,11 +953,13 @@ app.get(
         );
 
     }
+
 );
 
 
 app.get(
     "/admin",
+
     (req, res) => {
 
         res.sendFile(
@@ -842,28 +971,17 @@ app.get(
         );
 
     }
+
 );
 
 
-// =========================
-// 404
-// =========================
-
-app.use(
-    (req, res) => {
-
-        res.redirect("/");
-
-    }
-);
-
-
-// =========================
-// START
-// =========================
+/* =========================================================
+   START SERVER
+   ========================================================= */
 
 app.listen(
     PORT,
+
     () => {
 
         console.log(
@@ -871,4 +989,5 @@ app.listen(
         );
 
     }
+
 );
