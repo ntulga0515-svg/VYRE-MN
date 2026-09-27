@@ -1,15 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
     <title>VYRE.MN — CS2 Community</title>
-    <link rel="stylesheet" href="/style.css">
+
+    <link
+        rel="stylesheet"
+        href="/style.css"
+    >
+
 </head>
+
 
 <body>
 
 <div class="bg-glow"></div>
+
 
 <aside class="sidebar">
 
@@ -19,7 +33,9 @@
 
     <div class="brand-line"></div>
 
+
     <nav>
+
         <a class="nav-item active" href="/">
             <span>⌂</span> HOME
         </a>
@@ -44,23 +60,40 @@
             <span>◆</span> CLANS
         </a>
 
-        <a class="nav-item" href="/discord">
+        <!-- DISCORD DIRECT LINK -->
+
+        <a
+            class="nav-item"
+            href="https://discord.gg/mAa7dct57"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
             <span>◌</span> DISCORD
         </a>
+
     </nav>
+
 
     <div class="sidebar-bottom">
 
         <div class="system-status">
+
             <i></i>
+
             <div>
-                <strong>ALL SYSTEMS</strong>
-                <small>OPERATIONAL</small>
+
+                <strong>
+                    ALL SYSTEMS
+                </strong>
+
+                <small>
+                    OPERATIONAL
+                </small>
+
             </div>
+
         </div>
 
-
-        <!-- STEAM LOGGED OUT -->
 
         <div id="steamDisconnected">
 
@@ -74,8 +107,6 @@
 
         </div>
 
-
-        <!-- STEAM LOGGED IN -->
 
         <div
             id="steamConnected"
@@ -100,17 +131,26 @@
 
 <main class="main">
 
+
     <header class="topbar">
+
         <div>
+
             <span class="top-live"></span>
+
             MONGOLIA
+
         </div>
 
-        <div>CS2 COMMUNITY</div>
+        <div>
+            CS2 COMMUNITY
+        </div>
+
     </header>
 
 
     <section class="hero">
+
 
         <div class="hero-content">
 
@@ -118,16 +158,25 @@
                 MONGOLIAN CS2 COMMUNITY
             </div>
 
+
             <h1>
+
                 PLAY.<br>
+
                 <span>COMPETE.</span><br>
+
                 DOMINATE.
+
             </h1>
 
+
             <p>
+
                 VYRE.MN is a next generation Counter-Strike 2
                 community built for Mongolian players.
+
             </p>
+
 
             <div class="hero-buttons">
 
@@ -137,6 +186,7 @@
                 >
                     PLAY NOW →
                 </a>
+
 
                 <a
                     href="/skins"
@@ -149,14 +199,19 @@
 
         </div>
 
+
         <div class="hero-mark">
+
             <span>V</span>
+
         </div>
+
 
     </section>
 
 
     <section class="home-section">
+
 
         <div class="section-head">
 
@@ -172,6 +227,7 @@
 
             </div>
 
+
             <a
                 href="/servers"
                 class="view-all"
@@ -183,6 +239,7 @@
 
 
         <div class="stats-grid">
+
 
             <div class="stat-card">
 
@@ -235,12 +292,14 @@
 
             </div>
 
+
         </div>
 
     </section>
 
 
     <section class="home-section">
+
 
         <div class="section-head">
 
@@ -260,6 +319,7 @@
 
 
         <div class="feature-grid">
+
 
             <a
                 href="/servers"
@@ -359,6 +419,7 @@
 
             </a>
 
+
         </div>
 
     </section>
@@ -376,10 +437,130 @@
 
     </footer>
 
+
 </main>
 
 
 <script src="/script.js"></script>
 
+
+<script>
+
+function steamLogin() {
+
+    window.location.href =
+        "/api/auth/steam";
+
+}
+
+
+async function checkSteamLogin() {
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/auth/me"
+            );
+
+
+        const data =
+            await response.json();
+
+
+        const disconnected =
+            document.getElementById(
+                "steamDisconnected"
+            );
+
+
+        const connected =
+            document.getElementById(
+                "steamConnected"
+            );
+
+
+        const profileLink =
+            document.getElementById(
+                "steamProfileLink"
+            );
+
+
+        if (!data.loggedIn) {
+
+            if (disconnected) {
+
+                disconnected.style.display =
+                    "block";
+
+            }
+
+
+            if (connected) {
+
+                connected.style.display =
+                    "none";
+
+            }
+
+            return;
+
+        }
+
+
+        if (disconnected) {
+
+            disconnected.style.display =
+                "none";
+
+        }
+
+
+        if (connected) {
+
+            connected.style.display =
+                "block";
+
+        }
+
+
+        if (
+            profileLink &&
+            data.user &&
+            data.user.steam_id
+        ) {
+
+            profileLink.href =
+                "/profile/" +
+                data.user.steam_id;
+
+        }
+
+
+    } catch (error) {
+
+        console.error(
+            "Steam auth check failed:",
+            error
+        );
+
+    }
+
+}
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+        checkSteamLogin();
+
+    }
+);
+
+</script>
+
+
 </body>
+
 </html>
