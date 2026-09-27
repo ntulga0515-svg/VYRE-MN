@@ -40,6 +40,7 @@
             border-radius: 12px;
             object-fit: cover;
             background: #111;
+            border: 1px solid rgba(255,255,255,.1);
         }
 
         .profile-label {
@@ -98,6 +99,20 @@
 
         .profile-box strong {
             font-size: 15px;
+        }
+
+        .profile-online {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-online-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #42ff88;
+            box-shadow: 0 0 10px rgba(66,255,136,.7);
         }
 
     </style>
@@ -252,8 +267,12 @@
                     STATUS
                 </span>
 
-                <strong>
+                <strong class="profile-online">
+
+                    <i class="profile-online-dot"></i>
+
                     ONLINE
+
                 </strong>
 
             </div>
@@ -325,6 +344,8 @@ async function loadProfile() {
             await response.json();
 
 
+        /* NAME */
+
         document.getElementById(
             "profileName"
         ).textContent =
@@ -332,12 +353,16 @@ async function loadProfile() {
             "Steam Player";
 
 
+        /* STEAM ID */
+
         document.getElementById(
             "profileSteamId"
         ).textContent =
             player.steam_id ||
             steamId;
 
+
+        /* RANK */
 
         document.getElementById(
             "profileRank"
@@ -353,7 +378,12 @@ async function loadProfile() {
             "PLAYER";
 
 
-        if (player.avatar) {
+        /* AVATAR */
+
+        if (
+            player.avatar &&
+            player.avatar.startsWith("http")
+        ) {
 
             document.getElementById(
                 "profileAvatar"
@@ -365,13 +395,17 @@ async function loadProfile() {
             document.getElementById(
                 "profileAvatar"
             ).src =
-                "https://avatars.cloudflare.steamstatic.com/";
+                "https://avatars.steamstatic.com/";
         }
 
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Profile error:",
+            error
+        );
+
 
         document.getElementById(
             "profileName"
