@@ -6,7 +6,6 @@ const passport = require("passport");
 const SteamStrategy = require("passport-steam").Strategy;
 
 const app = express();
-
 const PORT = process.env.PORT || 3000;
 
 
@@ -52,24 +51,19 @@ CREATE TABLE IF NOT EXISTS bans (
    SEED SERVERS
    ========================================================= */
 
-const serverCount =
-    db.prepare(`
-        SELECT COUNT(*) AS count
-        FROM servers
-    `).get().count;
+const serverCount = db
+    .prepare("SELECT COUNT(*) AS count FROM servers")
+    .get().count;
 
 
 if (serverCount === 0) {
 
-    const insertServer =
-        db.prepare(`
-            INSERT INTO servers
-            (name, type, ip, port, status)
-            VALUES (?, ?, ?, ?, ?)
-        `);
+    const insertServer = db.prepare(`
+        INSERT INTO servers
+        (name, type, ip, port, status)
+        VALUES (?, ?, ?, ?, ?)
+    `);
 
-
-    /* DEATHMATCH */
 
     insertServer.run(
         "VYRE DM #1",
@@ -96,8 +90,6 @@ if (serverCount === 0) {
     );
 
 
-    /* RETAKE */
-
     insertServer.run(
         "VYRE RETAKE #1",
         "Retake",
@@ -122,8 +114,6 @@ if (serverCount === 0) {
         "offline"
     );
 
-
-    /* 5V5 */
 
     for (let i = 1; i <= 20; i++) {
 
@@ -159,10 +149,8 @@ app.use(
 
 app.set("trust proxy", 1);
 
-
 app.use(
     session({
-
         secret:
             process.env.SESSION_SECRET ||
             "vyre-mn-change-this-secret",
@@ -172,7 +160,6 @@ app.use(
         saveUninitialized: false,
 
         cookie: {
-
             secure:
                 process.env.NODE_ENV === "production",
 
@@ -180,9 +167,7 @@ app.use(
 
             maxAge:
                 7 * 24 * 60 * 60 * 1000
-
         }
-
     })
 );
 
@@ -191,17 +176,12 @@ app.use(
    PASSPORT
    ========================================================= */
 
-app.use(
-    passport.initialize()
-);
-
-app.use(
-    passport.session()
-);
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 /* =========================================================
-   STATIC FILES
+   STATIC
    ========================================================= */
 
 app.use(
@@ -212,23 +192,18 @@ app.use(
 
 
 /* =========================================================
-   STEAM SERIALIZE
+   SERIALIZE
    ========================================================= */
 
 passport.serializeUser(
     (user, done) => {
-
         done(null, user);
-
     }
 );
 
-
 passport.deserializeUser(
     (user, done) => {
-
         done(null, user);
-
     }
 );
 
@@ -239,9 +214,7 @@ passport.deserializeUser(
 
 passport.use(
     new SteamStrategy(
-
         {
-
             returnURL:
                 "https://vyre-mn.onrender.com/api/auth/steam/return",
 
@@ -250,26 +223,18 @@ passport.use(
 
             apiKey:
                 process.env.STEAM_API_KEY
-
         },
 
-
-        (
-            identifier,
-            profile,
-            done
-        ) => {
+        (identifier, profile, done) => {
 
             try {
 
                 const steamId =
                     profile.id;
 
-
                 const name =
                     profile.displayName ||
                     "Steam Player";
-
 
                 const avatar =
                     profile.photos &&
@@ -285,9 +250,7 @@ passport.use(
                         SELECT *
                         FROM players
                         WHERE steam_id = ?
-                    `).get(
-                        steamId
-                    );
+                    `).get(steamId);
 
 
                 if (!existing) {
@@ -318,7 +281,6 @@ passport.use(
                 return done(
                     null,
                     {
-
                         steam_id:
                             steamId,
 
@@ -327,21 +289,17 @@ passport.use(
 
                         avatar:
                             avatar
-
                     }
                 );
 
 
             } catch (error) {
 
-                return done(
-                    error
-                );
+                return done(error);
 
             }
 
         }
-
     )
 );
 
@@ -353,10 +311,7 @@ passport.use(
 app.get(
     "/api/auth/steam",
 
-    passport.authenticate(
-        "steam"
-    )
-
+    passport.authenticate("steam")
 );
 
 
@@ -379,7 +334,6 @@ app.get(
         res.redirect("/");
 
     }
-
 );
 
 
@@ -392,9 +346,7 @@ app.get(
 
     (req, res) => {
 
-        if (
-            !req.isAuthenticated()
-        ) {
+        if (!req.isAuthenticated()) {
 
             return res.json({
                 loggedIn: false
@@ -404,15 +356,11 @@ app.get(
 
 
         res.json({
-
             loggedIn: true,
-
             user: req.user
-
         });
 
     }
-
 );
 
 
@@ -425,22 +373,17 @@ app.get(
 
     (req, res) => {
 
-        req.logout(
-            () => {
+        req.logout(() => {
 
-                req.session.destroy(
-                    () => {
+            req.session.destroy(() => {
 
-                        res.redirect("/");
+                res.redirect("/");
 
-                    }
-                );
+            });
 
-            }
-        );
+        });
 
     }
-
 );
 
 
@@ -454,23 +397,17 @@ app.get(
     (req, res) => {
 
         res.json({
-
             online: true,
-
             name: "VYRE.MN",
-
-            time:
-                new Date().toISOString()
-
+            time: new Date().toISOString()
         });
 
     }
-
 );
 
 
 /* =========================================================
-   PLAYERS
+   ALL PLAYERS
    ========================================================= */
 
 app.get(
@@ -485,13 +422,43 @@ app.get(
                 ORDER BY id DESC
             `).all();
 
-
-        res.json(
-            players
-        );
+        res.json(players);
 
     }
+);
 
+
+/* =========================================================
+   SINGLE PLAYER
+   ========================================================= */
+
+app.get(
+    "/api/players/:steam_id",
+
+    (req, res) => {
+
+        const player =
+            db.prepare(`
+                SELECT *
+                FROM players
+                WHERE steam_id = ?
+            `).get(
+                req.params.steam_id
+            );
+
+
+        if (!player) {
+
+            return res.status(404).json({
+                error: "Player not found"
+            });
+
+        }
+
+
+        res.json(player);
+
+    }
 );
 
 
@@ -511,16 +478,11 @@ app.post(
         } = req.body;
 
 
-        if (
-            !steam_id ||
-            !name
-        ) {
+        if (!steam_id || !name) {
 
             return res.status(400).json({
-
                 error:
                     "steam_id and name are required"
-
             });
 
         }
@@ -534,45 +496,34 @@ app.post(
                     (steam_id, name, rank)
                     VALUES (?, ?, ?)
                 `).run(
-
                     steam_id,
-
                     name,
-
-                    rank ||
-                    "PLAYER"
-
+                    rank || "PLAYER"
                 );
 
 
             res.json({
-
                 success: true,
-
                 id:
                     result.lastInsertRowid
-
             });
 
 
         } catch (error) {
 
             res.status(400).json({
-
                 error:
                     error.message
-
             });
 
         }
 
     }
-
 );
 
 
 /* =========================================================
-   UPDATE PLAYER RANK
+   UPDATE RANK
    ========================================================= */
 
 app.post(
@@ -586,16 +537,11 @@ app.post(
         } = req.body;
 
 
-        if (
-            !steam_id ||
-            !rank
-        ) {
+        if (!steam_id || !rank) {
 
             return res.status(400).json({
-
                 error:
                     "steam_id and rank are required"
-
             });
 
         }
@@ -606,22 +552,16 @@ app.post(
             SET rank = ?
             WHERE steam_id = ?
         `).run(
-
             rank,
-
             steam_id
-
         );
 
 
         res.json({
-
             success: true
-
         });
 
     }
-
 );
 
 
@@ -641,13 +581,9 @@ app.get(
                 ORDER BY id ASC
             `).all();
 
-
-        res.json(
-            servers
-        );
+        res.json(servers);
 
     }
-
 );
 
 
@@ -666,16 +602,11 @@ app.post(
         } = req.body;
 
 
-        if (
-            !id ||
-            !status
-        ) {
+        if (!id || !status) {
 
             return res.status(400).json({
-
                 error:
                     "id and status are required"
-
             });
 
         }
@@ -686,22 +617,16 @@ app.post(
             SET status = ?
             WHERE id = ?
         `).run(
-
             status,
-
             id
-
         );
 
 
         res.json({
-
             success: true
-
         });
 
     }
-
 );
 
 
@@ -721,13 +646,9 @@ app.get(
                 ORDER BY created_at DESC
             `).all();
 
-
-        res.json(
-            bans
-        );
+        res.json(bans);
 
     }
-
 );
 
 
@@ -748,15 +669,11 @@ app.post(
         } = req.body;
 
 
-        if (
-            !steam_id
-        ) {
+        if (!steam_id) {
 
             return res.status(400).json({
-
                 error:
                     "steam_id is required"
-
             });
 
         }
@@ -768,32 +685,20 @@ app.post(
                 (steam_id, name, reason, admin_steam_id)
                 VALUES (?, ?, ?, ?)
             `).run(
-
                 steam_id,
-
-                name ||
-                null,
-
-                reason ||
-                null,
-
-                admin_steam_id ||
-                null
-
+                name || null,
+                reason || null,
+                admin_steam_id || null
             );
 
 
         res.json({
-
             success: true,
-
             id:
                 result.lastInsertRowid
-
         });
 
     }
-
 );
 
 
@@ -810,25 +715,20 @@ app.delete(
             DELETE FROM bans
             WHERE steam_id = ?
         `).run(
-
             req.params.steam_id
-
         );
 
 
         res.json({
-
             success: true
-
         });
 
     }
-
 );
 
 
 /* =========================================================
-   PAGE ROUTES
+   PAGES
    ========================================================= */
 
 app.get(
@@ -845,7 +745,6 @@ app.get(
         );
 
     }
-
 );
 
 
@@ -863,7 +762,6 @@ app.get(
         );
 
     }
-
 );
 
 
@@ -881,7 +779,6 @@ app.get(
         );
 
     }
-
 );
 
 
@@ -899,7 +796,6 @@ app.get(
         );
 
     }
-
 );
 
 
@@ -917,7 +813,6 @@ app.get(
         );
 
     }
-
 );
 
 
@@ -935,7 +830,6 @@ app.get(
         );
 
     }
-
 );
 
 
@@ -953,9 +847,33 @@ app.get(
         );
 
     }
-
 );
 
+
+/* =========================================================
+   PROFILE PAGE
+   ========================================================= */
+
+app.get(
+    "/profile/:steam_id",
+
+    (req, res) => {
+
+        res.sendFile(
+            path.join(
+                __dirname,
+                "public",
+                "profile.html"
+            )
+        );
+
+    }
+);
+
+
+/* =========================================================
+   ADMIN
+   ========================================================= */
 
 app.get(
     "/admin",
@@ -971,12 +889,11 @@ app.get(
         );
 
     }
-
 );
 
 
 /* =========================================================
-   START SERVER
+   START
    ========================================================= */
 
 app.listen(
@@ -989,5 +906,4 @@ app.listen(
         );
 
     }
-
 );
