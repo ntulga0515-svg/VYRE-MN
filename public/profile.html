@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Profile — VYRE.MN</title>
+
+    <link
+        rel="stylesheet"
+        href="/style.css"
+    >
+
+    <style>
+
+        .profile-page {
+            padding: 40px;
+            max-width: 1100px;
+        }
+
+        .profile-card {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            padding: 35px;
+            border: 1px solid rgba(255,255,255,.08);
+            background: rgba(255,255,255,.025);
+            border-radius: 14px;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #111;
+        }
+
+        .profile-label {
+            font-size: 11px;
+            letter-spacing: 2px;
+            opacity: .5;
+            margin-bottom: 8px;
+        }
+
+        #profileName {
+            margin: 0 0 10px;
+            font-size: 32px;
+        }
+
+        .profile-rank {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 5px;
+            background: rgba(255,255,255,.08);
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .profile-steamid {
+            margin-top: 18px;
+            font-size: 12px;
+            opacity: .55;
+        }
+
+        .profile-steamid span {
+            margin-left: 10px;
+            opacity: 1;
+        }
+
+        .profile-sections {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .profile-box {
+            min-width: 180px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,.08);
+            background: rgba(255,255,255,.025);
+            border-radius: 10px;
+        }
+
+        .profile-box span {
+            display: block;
+            font-size: 10px;
+            letter-spacing: 2px;
+            opacity: .45;
+            margin-bottom: 8px;
+        }
+
+        .profile-box strong {
+            font-size: 15px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="bg-glow"></div>
+
+
+<aside class="sidebar">
+
+    <div class="brand">
+        <span>VYRE</span><b>.MN</b>
+    </div>
+
+    <div class="brand-line"></div>
+
+
+    <nav>
+
+        <a href="/">HOME</a>
+
+        <a href="/servers">SERVERS</a>
+
+        <a href="/skins">SKINCHANGER</a>
+
+        <a href="/leaderboard">LEADERBOARD</a>
+
+        <a href="/players">PLAYERS</a>
+
+        <a href="/clans">CLANS</a>
+
+        <a href="/discord">DISCORD</a>
+
+        <a href="/profile" class="active">
+            PROFILE
+        </a>
+
+    </nav>
+
+</aside>
+
+
+<main class="main">
+
+    <section class="profile-page">
+
+        <div class="profile-card">
+
+            <img
+                id="profileAvatar"
+                class="profile-avatar"
+                src=""
+                alt="Steam Avatar"
+            >
+
+
+            <div>
+
+                <div class="profile-label">
+                    STEAM PROFILE
+                </div>
+
+                <h1 id="profileName">
+                    Loading...
+                </h1>
+
+                <div
+                    id="profileRank"
+                    class="profile-rank"
+                >
+                    PLAYER
+                </div>
+
+                <div class="profile-steamid">
+
+                    STEAM ID:
+
+                    <span id="profileSteamId">
+                        -
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="profile-sections">
+
+            <div class="profile-box">
+
+                <span>STATUS</span>
+
+                <strong>
+                    ONLINE
+                </strong>
+
+            </div>
+
+
+            <div class="profile-box">
+
+                <span>RANK</span>
+
+                <strong id="profileRankBox">
+                    PLAYER
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+async function loadProfile() {
+
+    const parts =
+        window.location.pathname
+            .split("/");
+
+    const steamId =
+        parts[2];
+
+
+    if (!steamId) {
+
+        document.getElementById(
+            "profileName"
+        ).textContent =
+            "PROFILE NOT FOUND";
+
+        return;
+
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/players/" +
+                steamId
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Profile not found"
+            );
+
+        }
+
+
+        const player =
+            await response.json();
+
+
+        document.getElementById(
+            "profileName"
+        ).textContent =
+            player.name ||
+            "Steam Player";
+
+
+        document.getElementById(
+            "profileSteamId"
+        ).textContent =
+            player.steam_id ||
+            steamId;
+
+
+        document.getElementById(
+            "profileRank"
+        ).textContent =
+            player.rank ||
+            "PLAYER";
+
+
+        document.getElementById(
+            "profileRankBox"
+        ).textContent =
+            player.rank ||
+            "PLAYER";
+
+
+        if (player.avatar) {
+
+            document.getElementById(
+                "profileAvatar"
+            ).src =
+                player.avatar;
+
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById(
+            "profileName"
+        ).textContent =
+            "PROFILE NOT FOUND";
+
+    }
+
+}
+
+
+loadProfile();
+
+</script>
+
+
+</body>
+
+</html>
