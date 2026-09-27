@@ -303,6 +303,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     changeWeapon("AK-47");
 
+    checkSteamLogin();
+
 });
 
 
@@ -347,8 +349,6 @@ function renderSkins() {
         skinData[currentWeapon] || [];
 
 
-    /* TEAM FILTER */
-
     if (currentTeam !== "ALL") {
 
         skins = skins.filter(skin => {
@@ -362,8 +362,6 @@ function renderSkins() {
 
     }
 
-
-    /* SEARCH */
 
     if (search) {
 
@@ -383,8 +381,6 @@ function renderSkins() {
     grid.innerHTML = "";
 
 
-    /* COUNT */
-
     const count =
         document.getElementById("skinCount");
 
@@ -395,8 +391,6 @@ function renderSkins() {
 
     }
 
-
-    /* EMPTY */
 
     if (!skins.length) {
 
@@ -412,9 +406,7 @@ function renderSkins() {
     }
 
 
-    /* CARDS */
-
-    skins.forEach((skin, index) => {
+    skins.forEach((skin) => {
 
         const name = skin[0];
         const team = skin[1];
@@ -429,7 +421,8 @@ function renderSkins() {
             selectSkin(
                 currentWeapon,
                 name,
-                team
+                team,
+                card
             );
 
         };
@@ -523,7 +516,8 @@ function weaponShort(weapon) {
 function selectSkin(
     weapon,
     skin,
-    team
+    team,
+    card
 ) {
 
     selectedSkin = {
@@ -571,8 +565,6 @@ function selectSkin(
     }
 
 
-    /* VISUAL SELECTED */
-
     document
         .querySelectorAll(".mirage-skin-card")
         .forEach(card => {
@@ -582,8 +574,11 @@ function selectSkin(
         });
 
 
-    event.currentTarget
-        .classList.add("selected");
+    if (card) {
+
+        card.classList.add("selected");
+
+    }
 
 }
 
@@ -609,7 +604,9 @@ function teamFilter(
         });
 
 
-    button.classList.add("active");
+    if (button) {
+        button.classList.add("active");
+    }
 
 
     renderSkins();
@@ -646,7 +643,9 @@ function skinCategory(
         });
 
 
-    button.classList.add("active");
+    if (button) {
+        button.classList.add("active");
+    }
 
 
     const weaponArea =
@@ -658,8 +657,13 @@ function skinCategory(
 
     if (category === "weapons") {
 
-        weaponArea.style.display = "block";
-        otherArea.style.display = "none";
+        if (weaponArea) {
+            weaponArea.style.display = "block";
+        }
+
+        if (otherArea) {
+            otherArea.style.display = "none";
+        }
 
         renderSkins();
 
@@ -668,8 +672,13 @@ function skinCategory(
     }
 
 
-    weaponArea.style.display = "none";
-    otherArea.style.display = "block";
+    if (weaponArea) {
+        weaponArea.style.display = "none";
+    }
+
+    if (otherArea) {
+        otherArea.style.display = "block";
+    }
 
 
     const title =
@@ -688,11 +697,15 @@ function skinCategory(
     };
 
 
-    title.textContent =
-        names[category] || category.toUpperCase();
+    if (title) {
+        title.textContent =
+            names[category] || category.toUpperCase();
+    }
 
-    message.textContent =
-        names[category] || category.toUpperCase();
+    if (message) {
+        message.textContent =
+            names[category] || category.toUpperCase();
+    }
 
 }
 
@@ -745,46 +758,88 @@ function clearSelected() {
 
 
 /* =========================================================
-   STEAM LOGIN — DEMO
+   STEAM LOGIN
    ========================================================= */
 
 function steamLogin() {
 
-    const disconnected =
-        document.getElementById(
-            "steamDisconnected"
+    window.location.href = "/api/auth/steam";
+
+}
+
+
+/* =========================================================
+   CHECK STEAM LOGIN
+   ========================================================= */
+
+async function checkSteamLogin() {
+
+    try {
+
+        const response =
+            await fetch("/api/auth/me");
+
+        const data =
+            await response.json();
+
+
+        if (!data.loggedIn) {
+
+            return;
+
+        }
+
+
+        const disconnected =
+            document.getElementById(
+                "steamDisconnected"
+            );
+
+        const connected =
+            document.getElementById(
+                "steamConnected"
+            );
+
+
+        if (disconnected) {
+            disconnected.style.display = "none";
+        }
+
+        if (connected) {
+            connected.style.display = "flex";
+        }
+
+
+        const name =
+            document.getElementById("steamName");
+
+        if (name && data.user) {
+
+            name.textContent =
+                data.user.name || "Steam User";
+
+        }
+
+    } catch (error) {
+
+        console.error(
+            "Steam auth check failed:",
+            error
         );
-
-    const connected =
-        document.getElementById(
-            "steamConnected"
-        );
-
-
-    if (!disconnected || !connected) {
-
-        alert(
-            "STEAM AUTH WILL BE CONNECTED LATER."
-        );
-
-        return;
 
     }
 
-
-    disconnected.style.display = "none";
-    connected.style.display = "flex";
+}
 
 
-    const name =
-        document.getElementById("steamName");
+/* =========================================================
+   LOGOUT
+   ========================================================= */
 
-    if (name) {
+function steamLogout() {
 
-        name.textContent =
-            "Steam User";
-
-    }
+    window.location.href =
+        "/api/auth/logout";
 
 }
 
