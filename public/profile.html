@@ -121,30 +121,84 @@
 
     <nav>
 
-        <a href="/">HOME</a>
+        <a class="nav-item" href="/">
+            <span>⌂</span> HOME
+        </a>
 
-        <a href="/servers">SERVERS</a>
+        <a class="nav-item" href="/servers">
+            <span>▣</span> SERVERS
+        </a>
 
-        <a href="/skins">SKINCHANGER</a>
+        <a class="nav-item" href="/skins">
+            <span>◈</span> SKINCHANGER
+        </a>
 
-        <a href="/leaderboard">LEADERBOARD</a>
+        <a class="nav-item" href="/leaderboard">
+            <span>♛</span> LEADERBOARD
+        </a>
 
-        <a href="/players">PLAYERS</a>
+        <a class="nav-item" href="/players">
+            <span>◉</span> PLAYERS
+        </a>
 
-        <a href="/clans">CLANS</a>
+        <a class="nav-item" href="/clans">
+            <span>◆</span> CLANS
+        </a>
 
-        <a href="/discord">DISCORD</a>
+        <a class="nav-item" href="/discord">
+            <span>◌</span> DISCORD
+        </a>
 
-        <a href="/profile" class="active">
-            PROFILE
+        <a class="nav-item active" href="/profile">
+            <span>◉</span> PROFILE
         </a>
 
     </nav>
+
+
+    <div class="sidebar-bottom">
+
+        <div class="system-status">
+
+            <i></i>
+
+            <div>
+
+                <strong>
+                    ALL SYSTEMS
+                </strong>
+
+                <small>
+                    OPERATIONAL
+                </small>
+
+            </div>
+
+        </div>
+
+    </div>
 
 </aside>
 
 
 <main class="main">
+
+    <header class="topbar">
+
+        <div>
+
+            <span class="top-live"></span>
+
+            MONGOLIA
+
+        </div>
+
+        <div>
+            CS2 COMMUNITY
+        </div>
+
+    </header>
+
 
     <section class="profile-page">
 
@@ -194,7 +248,9 @@
 
             <div class="profile-box">
 
-                <span>STATUS</span>
+                <span>
+                    STATUS
+                </span>
 
                 <strong>
                     ONLINE
@@ -205,7 +261,9 @@
 
             <div class="profile-box">
 
-                <span>RANK</span>
+                <span>
+                    RANK
+                </span>
 
                 <strong id="profileRankBox">
                     PLAYER
@@ -227,6 +285,7 @@ async function loadProfile() {
     const parts =
         window.location.pathname
             .split("/");
+
 
     const steamId =
         parts[2];
@@ -301,7 +360,14 @@ async function loadProfile() {
             ).src =
                 player.avatar;
 
+        } else {
+
+            document.getElementById(
+                "profileAvatar"
+            ).src =
+                "https://avatars.cloudflare.steamstatic.com/";
         }
+
 
     } catch (error) {
 
