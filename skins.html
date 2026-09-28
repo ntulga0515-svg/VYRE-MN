@@ -691,6 +691,87 @@
 @media(min-width:701px){
     .options{ grid-template-columns:repeat(3,1fr); }
 }
+
+.skin-header{ align-items:center; }
+
+[hidden]{ display:none !important; }
+
+.login-notice{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:11px 14px; margin-bottom:10px; font-size:10px;
+    background:#0c0c0c; border:1px solid rgba(255,255,255,.1); border-radius:3px;
+}
+.login-notice button{
+    border:0; border-radius:3px; background:#fff; color:#000;
+    font-size:9px; font-weight:900; padding:8px 12px; cursor:pointer;
+}
+
+.group-tabs{ display:flex; gap:5px; flex-wrap:wrap; margin-bottom:12px; }
+.group-tab{
+    height:36px; padding:0 14px; background:#0c0c0c;
+    border:1px solid rgba(255,255,255,.06); border-radius:3px;
+    color:rgba(255,255,255,.4); font-size:9px; font-weight:800; cursor:pointer;
+}
+.group-tab em{ font-style:normal; opacity:.45; margin-left:6px; }
+.group-tab:hover,.group-tab.active{ background:#151515; border-color:rgba(255,255,255,.17); color:#fff; }
+
+.weapon-grid{ display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:6px; }
+.wcard{
+    padding:0; overflow:hidden; text-align:center; cursor:pointer; color:#fff;
+    background:#0b0b0b; border:1px solid rgba(255,255,255,.055); border-radius:3px; transition:.15s;
+}
+.wcard:hover{ background:#111; border-color:rgba(255,255,255,.16); transform:translateY(-1px); }
+.wcard.active{ border-color:#fff; }
+.wcard .wimg{
+    height:96px; display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(circle at center, rgba(255,255,255,.075), transparent 68%);
+}
+.wcard .wimg img{ width:86%; height:86%; object-fit:contain; }
+.wcard strong{ display:block; padding:8px 6px 2px; font-size:10px; }
+.wcard small{
+    display:block; padding:0 6px 9px; font-size:7px; color:rgba(255,255,255,.3);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.wcard.has small{ color:#7dffb0; }
+
+.skin-panel{ margin-top:18px; padding-top:14px; border-top:1px solid rgba(255,255,255,.08); }
+
+.sel-bar{
+    position:sticky; top:0; z-index:5; display:flex; gap:14px; align-items:center;
+    padding:10px; margin-bottom:12px; background:#0b0b0b;
+    border:1px solid rgba(255,255,255,.12); border-radius:3px;
+}
+.sel-pic{
+    flex:none; width:130px; height:70px; display:flex; align-items:center; justify-content:center;
+    font-size:9px; font-weight:900; text-align:center; opacity:.9;
+    background:radial-gradient(circle, rgba(255,255,255,.07), transparent 68%);
+}
+.sel-pic img{ width:100%; height:100%; object-fit:contain; }
+.sel-main{ flex:1; min-width:0; }
+.sel-main small{ display:block; font-size:8px; color:rgba(255,255,255,.35); }
+.sel-main strong{ display:block; font-size:13px; margin:3px 0 8px; }
+.sel-options{ display:flex; gap:8px; flex-wrap:wrap; }
+.sel-options label{ font-size:7px; color:rgba(255,255,255,.3); letter-spacing:1px; }
+.sel-options select,.sel-options input{
+    display:block; margin-top:3px; height:28px; padding:0 7px; box-sizing:border-box;
+    background:#111; border:1px solid rgba(255,255,255,.08); border-radius:3px;
+    color:#fff; font-size:10px; outline:none;
+}
+.sel-options input{ width:90px; }
+.sel-actions{ display:flex; flex-direction:column; gap:5px; width:110px; }
+.sel-actions .save{ margin:0; height:34px; }
+.sel-actions .clear-btn{ padding:7px 0; }
+
+@media(max-width:1200px){ .weapon-grid{ grid-template-columns:repeat(5,1fr); } }
+@media(max-width:900px){ .weapon-grid{ grid-template-columns:repeat(4,1fr); } }
+@media(max-width:700px){
+    .weapon-grid{ grid-template-columns:repeat(3,1fr); }
+    .sel-bar{ flex-wrap:wrap; }
+    .sel-pic{ width:100%; }
+    .sel-actions{ flex-direction:row; width:100%; }
+    .sel-actions button{ flex:1; }
+}
+@media(max-width:480px){ .weapon-grid{ grid-template-columns:repeat(2,1fr); } }
 </style>
 </head>
 
@@ -816,311 +897,84 @@
 
 <section class="skin-page">
 
-<!-- HEADER -->
-
 <div class="skin-header">
 
     <div>
         <h1>SKINCHANGER</h1>
+        <p id="accountLine">Зэвсгээ сонгоод, дараа нь skin-ээ сонгоно уу.</p>
+    </div>
 
-        <p>
-            Configure your CS2 loadout.
-        </p>
+    <div class="team-filter">
+        <button class="active" onclick="teamFilter('ALL',this)">ALL</button>
+        <button onclick="teamFilter('T',this)">T</button>
+        <button onclick="teamFilter('CT',this)">CT</button>
     </div>
 
 </div>
 
-
-<!-- CATEGORY -->
-
-<div class="main-tabs">
-
-    <button class="main-tab active" type="button" onclick="skinCategory('weapons',this)">
-        <strong>WEAPONS</strong>
-        <span>Rifles, pistols, SMGs...</span>
-    </button>
-
-    <button class="main-tab" type="button" onclick="skinCategory('knives',this)">
-        <strong>KNIVES</strong>
-        <span>All knives + finishes</span>
-    </button>
-
-    <button class="main-tab" type="button" onclick="skinCategory('gloves',this)">
-        <strong>GLOVES</strong>
-        <span>All gloves + finishes</span>
-    </button>
-
-    <button class="main-tab" type="button" disabled style="opacity:.35;cursor:not-allowed">
-        <strong>AGENTS / MUSIC</strong>
-        <span>Coming soon</span>
-    </button>
-
+<div id="loginNotice" class="login-notice" hidden>
+    Skin хадгалахын тулд Steam-ээр нэвтэрнэ үү.
+    <button type="button" onclick="steamLogin()">STEAM LOGIN</button>
 </div>
 
+<div id="groupTabs" class="group-tabs"></div>
 
-<!-- WEAPONS -->
+<div id="weaponGrid" class="weapon-grid">Loading...</div>
 
-<div id="weaponArea">
+<div id="skinPanel" class="skin-panel" hidden>
 
-    <!-- FILTER -->
+    <div class="sel-bar">
 
-    <div class="filter-bar">
+        <div id="selectedPicture" class="sel-pic"><span>VYRE</span></div>
 
-        <div class="team-filter">
+        <div class="sel-main">
+            <small id="selectedWeapon">—</small>
+            <strong id="selectedSkin">NONE</strong>
+            <span id="selectedSkinSmall" hidden></span>
 
-            <button
-                class="active"
-                onclick="teamFilter('ALL',this)"
-            >
-                ALL
-            </button>
-
-            <button
-                onclick="teamFilter('T',this)"
-            >
-                T
-            </button>
-
-            <button
-                onclick="teamFilter('CT',this)"
-            >
-                CT
-            </button>
-
+            <div class="sel-options">
+                <label>WEAR
+                    <select id="settingWear">
+                        <option value="FN">FACTORY NEW</option>
+                        <option value="MW">MINIMAL WEAR</option>
+                        <option value="FT">FIELD-TESTED</option>
+                        <option value="WW">WELL-WORN</option>
+                        <option value="BS">BATTLE-SCARRED</option>
+                    </select>
+                </label>
+                <label>FLOAT
+                    <input id="settingFloat" type="number" min="0" max="1" step="0.001" value="0.01">
+                </label>
+                <label>PATTERN
+                    <input id="settingPattern" type="number" min="0" max="1000" step="1" value="0">
+                </label>
+            </div>
         </div>
 
-        <div class="skin-search">
-
-            <span>⌕</span>
-
-            <input
-                id="skinSearch"
-                type="text"
-                placeholder="Search skins..."
-                oninput="renderSkins()"
-            >
-
+        <div class="sel-actions">
+            <button class="save" type="button" onclick="saveLoadout()">SAVE</button>
+            <button class="clear-btn" type="button" onclick="clearSelected()">RESET</button>
+            <button class="clear-btn" type="button" onclick="closePanel()">CLOSE ✕</button>
         </div>
 
     </div>
-
-
-    <!-- WEAPON BAR -->
-
-    <div
-        id="weaponBar"
-        class="weapon-bar"
-    ></div>
-
-
-    <!-- TITLE -->
 
     <div class="collection-head">
-
         <div>
-
-            <small>
-                COLLECTION
-            </small>
-
-            <strong id="weaponTitle">
-                AK-47
-            </strong>
-
+            <small>COLLECTION</small>
+            <strong id="weaponTitle">—</strong>
         </div>
-
-        <span id="skinCount">
-            0 SKINS
-        </span>
-
+        <span id="skinCount">0 SKINS</span>
     </div>
 
-
-    <!-- GRID -->
-
-    <div
-        id="skinGrid"
-        class="skin-grid"
-    ></div>
-
-</div>
-
-
-<!-- OTHER -->
-
-<div
-    id="otherArea"
-    class="other"
->
-
-    <div
-        id="otherGrid"
-        class="other-grid"
-    ></div>
-
-</div>
-
-
-<!-- LOADOUT -->
-
-<div class="loadout">
-
-    <div class="loadout-head">
-
-        <div>
-
-            <small>
-                SELECTED LOADOUT
-            </small>
-
-            <strong id="selectedSkin">
-                NONE
-            </strong>
-
+    <div class="filter-bar">
+        <div class="skin-search">
+            <span>⌕</span>
+            <input id="skinSearch" type="text" placeholder="Skin хайх...">
         </div>
-
-        <button
-            class="clear-btn"
-            onclick="clearSelected()"
-        >
-            CLEAR
-        </button>
-
     </div>
 
-
-    <div class="selected-box">
-
-        <div
-            id="selectedPicture"
-            class="selected-image"
-        >
-            <span>VYRE</span>
-        </div>
-
-        <div class="selected-info">
-
-            <label>
-                WEAPON
-            </label>
-
-            <strong id="selectedWeapon">
-                —
-            </strong>
-
-            <label>
-                SKIN
-            </label>
-
-            <strong id="selectedSkinSmall">
-                NONE
-            </strong>
-
-        </div>
-
-    </div>
-
-
-    <div class="options">
-
-        <div class="option">
-            <span>WEAR</span>
-            <select id="settingWear">
-                <option value="FN">FACTORY NEW</option>
-                <option value="MW">MINIMAL WEAR</option>
-                <option value="FT">FIELD-TESTED</option>
-                <option value="WW">WELL-WORN</option>
-                <option value="BS">BATTLE-SCARRED</option>
-            </select>
-        </div>
-
-        <div class="option">
-            <span>FLOAT (0 - 1)</span>
-            <input id="settingFloat" type="number" min="0" max="1" step="0.001" value="0.01">
-        </div>
-
-        <div class="option">
-            <span>PATTERN (0 - 1000)</span>
-            <input id="settingPattern" type="number" min="0" max="1000" step="1" value="0">
-        </div>
-
-    </div>
-
-
-    <!-- STEAM -->
-
-    <div class="account">
-
-        <div class="account-title">
-            STEAM ACCOUNT
-        </div>
-
-
-        <div
-            id="steamDisconnected"
-            class="account-user"
-        >
-
-            <div class="account-avatar">
-                S
-            </div>
-
-            <div>
-
-                <strong>
-                    NOT CONNECTED
-                </strong>
-
-                <small>
-                    Steam login required
-                </small>
-
-            </div>
-
-        </div>
-
-
-        <div
-            id="steamConnected"
-            class="account-user"
-            style="display:none;"
-        >
-
-            <div
-                id="steamAvatar"
-                class="account-avatar"
-            >
-                S
-            </div>
-
-            <div>
-
-                <strong id="steamName">
-                    Steam User
-                </strong>
-
-                <small>
-                    CONNECTED
-                </small>
-
-            </div>
-
-        </div>
-
-
-        <button onclick="steamLogin()">
-            CONNECT STEAM
-        </button>
-
-    </div>
-
-
-    <button
-        class="save"
-        onclick="saveLoadout()"
-    >
-        SAVE LOADOUT
-    </button>
+    <div id="skinGrid" class="skin-grid"></div>
 
 </div>
 
