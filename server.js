@@ -6,6 +6,7 @@ const passport = require("passport");
 const SteamStrategy = require("passport-steam").Strategy;
 
 const app = express();
+app.set("trust proxy", 1);
 const PORT = process.env.PORT || 3000;
 
 // =========================
@@ -119,7 +120,7 @@ app.use(session({
     saveUninitialized: false,
 
     cookie: {
-        secure: false,
+        secure: "auto",
         httpOnly: true,
         maxAge: 7 * 24 * 60 * 60 * 1000
     }
@@ -243,6 +244,49 @@ passport.use(
 
 
 // =========================
+// ROLES / PERMISSIONS
+// =========================
+
+// Owners (always BOSS): comma separated SteamID64 list in ADMIN_STEAM_IDS
+const OWNER_IDS = (process.env.ADMIN_STEAM_IDS || "")
+    .split(",")
+    .map(x => x.trim())
+    .filter(Boolean);
+
+function rankOf(user) {
+    if (!user) return "PLAYER";
+    if (OWNER_IDS.includes(user.steam_id)) return "BOSS";
+    const row = db
+        .prepare("SELECT rank FROM players WHERE steam_id = ?")
+        .get(user.steam_id);
+    return row ? row.rank : "PLAYER";
+}
+
+function requireAdmin(req, res, next) {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ error: "Login required" });
+    }
+    const rank = rankOf(req.user);
+    if (rank === "ADMIN" || rank === "BOSS") return next();
+    res.status(403).json({ error: "Admin only" });
+}
+
+function requireBoss(req, res, next) {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({ error: "Login required" });
+    }
+    if (rankOf(req.user) === "BOSS") return next();
+    res.status(403).json({ error: "Boss only" });
+}
+
+// =========================
+// SKINCHANGER API
+// =========================
+
+app.use("/api/skins", require("./skins-api")(db));
+
+
+// =========================
 // STEAM LOGIN ROUTES
 // =========================
 
@@ -289,7 +333,7 @@ app.get(
 
             loggedIn: true,
 
-            user: req.user
+            user: { ...req.user, rank: rankOf(req.user) }
 
         });
 
@@ -373,6 +417,7 @@ app.get(
 
 app.post(
     "/api/players",
+    requireAdmin,
     (req, res) => {
 
         const {
@@ -436,6 +481,7 @@ app.post(
 
 app.post(
     "/api/players/rank",
+    requireBoss,
     (req, res) => {
 
         const {
@@ -536,6 +582,7 @@ app.get(
 
 app.post(
     "/api/servers/status",
+    requireAdmin,
     (req, res) => {
 
         const {
@@ -626,6 +673,7 @@ app.get(
 
 app.post(
     "/api/bans",
+    requireAdmin,
     (req, res) => {
 
         const {
@@ -690,6 +738,7 @@ app.post(
 
 app.delete(
     "/api/bans/:steam_id",
+    requireAdmin,
     (req, res) => {
 
         const result = db
@@ -817,13 +866,7 @@ app.get(
     "/discord",
     (req, res) => {
 
-        res.sendFile(
-            path.join(
-                __dirname,
-                "public",
-                "discord.html"
-            )
-        );
+        res.redirect("https://discord.gg/mAa7dct57");
 
     }
 );
