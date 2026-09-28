@@ -586,6 +586,103 @@ app.get(
 );
 
 
+
+// =========================
+// LIVE SERVER QUERY (A2S_INFO over UDP)
+// servers are listed in servers.json (name, ip, port)
+// =========================
+
+const dgram = require("dgram");
+const fsLive = require("fs");
+
+function a2sInfo(ip, port, timeout = 1500) {
+    return new Promise(resolve => {
+        const sock = dgram.createSocket("udp4");
+        let done = false;
+        const finish = v => {
+            if (done) return;
+            done = true;
+            clearTimeout(timer);
+            try { sock.close(); } catch (e) { /* ignore */ }
+            resolve(v);
+        };
+        const timer = setTimeout(() => finish(null), timeout);
+        const base = Buffer.concat([
+            Buffer.from([0xFF, 0xFF, 0xFF, 0xFF, 0x54]),
+            Buffer.from("Source Engine Query\0", "latin1")
+        ]);
+        sock.on("error", () => finish(null));
+        sock.on("message", msg => {
+            if (msg.length < 6) return;
+            if (msg[4] === 0x41) {           // challenge -> resend with it
+                sock.send(Buffer.concat([base, msg.subarray(5, 9)]), port, ip);
+                return;
+            }
+            if (msg[4] !== 0x49) return;
+            let o = 6;
+            const str = () => {
+                const end = msg.indexOf(0, o);
+                const v = msg.toString("utf8", o, end);
+                o = end + 1;
+                return v;
+            };
+            try {
+                const name = str();
+                const map = str();
+                str(); str();                // folder, game
+                o += 2;                      // app id
+                const players = msg[o++];
+                const max = msg[o++];
+                const bots = msg[o++];
+                finish({ name, map, players: Math.max(players - bots, 0), max });
+            } catch (e) { finish(null); }
+        });
+        sock.send(base, port, ip, err => { if (err) finish(null); });
+    });
+}
+
+let liveCache = { t: 0, data: [] };
+
+function readServerList() {
+    try {
+        const raw = fsLive.readFileSync(path.join(__dirname, "servers.json"), "utf8");
+        const list = JSON.parse(raw);
+        return Array.isArray(list) ? list : [];
+    } catch (e) {
+        console.error("servers.json error:", e.message);
+        return [];
+    }
+}
+
+app.get("/api/servers/live", async (req, res) => {
+    if (Date.now() - liveCache.t < 8000) return res.json(liveCache.data);
+
+    const list = readServerList();
+    const data = await Promise.all(list.map(async (sv, i) => {
+        const info = await a2sInfo(sv.ip, Number(sv.port) || 27015);
+        const base = {
+            id: i + 1,
+            name: sv.name || ("Server #" + (i + 1)),
+            ip: sv.ip,
+            port: Number(sv.port) || 27015,
+            type: sv.type || ""
+        };
+        if (!info) return { ...base, status: "offline", map: "", players: 0, max: 0 };
+        const m = /\[\s*(\d+)\s*-\s*(\d+)\s*\]/.exec(info.name);
+        return {
+            ...base,
+            status: info.players > 0 ? "live" : "waiting",
+            map: info.map,
+            players: info.players,
+            max: info.max,
+            score: m ? [Number(m[1]), Number(m[2])] : null
+        };
+    }));
+
+    liveCache = { t: Date.now(), data };
+    res.json(data);
+});
+
 // =========================
 // SERVER STATUS
 // =========================
