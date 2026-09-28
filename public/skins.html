@@ -1,435 +1,950 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SKINCHANGER — VYRE.MN</title>
-    <link rel="stylesheet" href="/style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SKINCHANGER — VYRE.MN</title>
+
+<link rel="stylesheet" href="/style.css">
+
+<style>
+/* =========================================================
+   VYRE.MN — SKINCHANGER
+   DARK / COMPACT / LEET STYLE
+   ========================================================= */
+
+.skin-page{
+    padding:24px 30px 50px;
+    max-width:1500px;
+}
+
+/* HEADER */
+
+.skin-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    margin-bottom:20px;
+}
+
+.skin-header h1{
+    margin:0;
+    font-size:25px;
+    letter-spacing:-.8px;
+}
+
+.skin-header p{
+    margin:6px 0 0;
+    font-size:11px;
+    color:rgba(255,255,255,.35);
+}
+
+/* PLAYER */
+
+.player-bar{
+    display:flex;
+    gap:7px;
+    margin-bottom:10px;
+}
+
+.player-bar input{
+    flex:1;
+    height:40px;
+    box-sizing:border-box;
+    padding:0 13px;
+    background:#0c0c0c;
+    border:1px solid rgba(255,255,255,.07);
+    border-radius:3px;
+    color:#fff;
+    outline:none;
+    font-size:11px;
+}
+
+.player-bar input:focus{
+    border-color:rgba(255,255,255,.18);
+}
+
+.player-bar button{
+    width:75px;
+    border:0;
+    border-radius:3px;
+    background:#fff;
+    color:#000;
+    font-size:9px;
+    font-weight:900;
+    cursor:pointer;
+}
+
+/* CATEGORY */
+
+.main-tabs{
+    display:flex;
+    gap:5px;
+    margin-bottom:10px;
+}
+
+.main-tab{
+    flex:1;
+    height:52px;
+    padding:0 13px;
+    background:#0c0c0c;
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:3px;
+    color:rgba(255,255,255,.35);
+    cursor:pointer;
+    text-align:left;
+}
+
+.main-tab strong{
+    display:block;
+    font-size:10px;
+    color:#fff;
+    margin-bottom:4px;
+}
+
+.main-tab span{
+    font-size:8px;
+    opacity:.5;
+}
+
+.main-tab:hover,
+.main-tab.active{
+    background:#151515;
+    border-color:rgba(255,255,255,.17);
+    color:#fff;
+}
+
+/* FILTER */
+
+.filter-bar{
+    display:flex;
+    gap:6px;
+    margin-bottom:9px;
+}
+
+.team-filter{
+    display:flex;
+    padding:2px;
+    background:#0b0b0b;
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:3px;
+}
+
+.team-filter button{
+    min-width:40px;
+    height:29px;
+    border:0;
+    background:transparent;
+    color:rgba(255,255,255,.35);
+    border-radius:2px;
+    font-size:8px;
+    font-weight:900;
+    cursor:pointer;
+}
+
+.team-filter button.active{
+    background:#fff;
+    color:#000;
+}
+
+.skin-search{
+    flex:1;
+    position:relative;
+}
+
+.skin-search span{
+    position:absolute;
+    left:11px;
+    top:8px;
+    font-size:12px;
+    opacity:.3;
+}
+
+.skin-search input{
+    width:100%;
+    height:35px;
+    box-sizing:border-box;
+    padding-left:32px;
+    background:#0b0b0b;
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:3px;
+    color:#fff;
+    outline:none;
+    font-size:10px;
+}
+
+/* WEAPONS */
+
+.weapon-bar{
+    display:flex;
+    gap:4px;
+    overflow-x:auto;
+    padding-bottom:5px;
+    margin-bottom:12px;
+}
+
+.weapon-bar::-webkit-scrollbar{
+    height:2px;
+}
+
+.weapon-tab{
+    flex:none;
+    height:32px;
+    padding:0 11px;
+    border:1px solid rgba(255,255,255,.06);
+    background:#0b0b0b;
+    color:rgba(255,255,255,.35);
+    border-radius:3px;
+    font-size:8px;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.weapon-tab:hover,
+.weapon-tab.active{
+    background:#151515;
+    border-color:rgba(255,255,255,.16);
+    color:#fff;
+}
+
+/* WEAPON SELECT */
+
+.weapon-select-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:9px;
+}
+
+.weapon-select-row select{
+    min-width:180px;
+    height:32px;
+    padding:0 9px;
+    background:#0b0b0b;
+    border:1px solid rgba(255,255,255,.06);
+    color:#fff;
+    border-radius:3px;
+    outline:none;
+    font-size:9px;
+}
+
+/* TITLE */
+
+.collection-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:end;
+    margin-bottom:8px;
+}
+
+.collection-head small{
+    display:block;
+    font-size:7px;
+    letter-spacing:1.5px;
+    color:rgba(255,255,255,.25);
+    margin-bottom:4px;
+}
+
+.collection-head strong{
+    font-size:13px;
+}
+
+#skinCount{
+    font-size:8px;
+    color:rgba(255,255,255,.3);
+}
+
+/* GRID */
+
+.skin-grid{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:6px;
+}
+
+.skin-card{
+    position:relative;
+    min-width:0;
+    padding:0;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.055);
+    background:#0b0b0b;
+    border-radius:3px;
+    color:#fff;
+    text-align:left;
+    cursor:pointer;
+    transition:.15s;
+}
+
+.skin-card:hover{
+    transform:translateY(-1px);
+    background:#111;
+    border-color:rgba(255,255,255,.16);
+}
+
+.skin-card.selected{
+    border-color:#fff;
+    box-shadow:0 0 0 1px rgba(255,255,255,.08);
+}
+
+.skin-picture{
+    height:115px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    background:
+        radial-gradient(
+            circle at center,
+            rgba(255,255,255,.075),
+            transparent 68%
+        );
+}
+
+.skin-picture img{
+    width:88%;
+    height:88%;
+    object-fit:contain;
+    position:relative;
+    z-index:2;
+    transition:.2s;
+}
+
+.skin-card:hover .skin-picture img{
+    transform:scale(1.04);
+}
+
+.skin-short{
+    position:absolute;
+    right:7px;
+    top:6px;
+    font-size:7px;
+    color:rgba(255,255,255,.25);
+    z-index:3;
+}
+
+.skin-info{
+    padding:8px 9px 9px;
+    border-top:1px solid rgba(255,255,255,.045);
+}
+
+.skin-info small{
+    display:block;
+    font-size:7px;
+    color:rgba(255,255,255,.25);
+    margin-bottom:4px;
+}
+
+.skin-info strong{
+    display:block;
+    font-size:9px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+/* OTHER */
+
+.other{
+    display:none;
+}
+
+.other-grid{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:6px;
+}
+
+.other-card{
+    background:#0b0b0b;
+    border:1px solid rgba(255,255,255,.055);
+    border-radius:3px;
+    overflow:hidden;
+    cursor:pointer;
+}
+
+.other-card img{
+    width:100%;
+    height:130px;
+    object-fit:contain;
+}
+
+.other-card div{
+    padding:9px;
+    border-top:1px solid rgba(255,255,255,.045);
+}
+
+.other-card small{
+    display:block;
+    font-size:7px;
+    opacity:.25;
+    margin-bottom:4px;
+}
+
+.other-card strong{
+    font-size:9px;
+}
+
+/* LOADOUT */
+
+.loadout{
+    margin-top:22px;
+    border-top:1px solid rgba(255,255,255,.06);
+    padding-top:18px;
+}
+
+.loadout-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:8px;
+}
+
+.loadout-head small{
+    display:block;
+    font-size:7px;
+    letter-spacing:1.5px;
+    opacity:.25;
+}
+
+.loadout-head strong{
+    display:block;
+    margin-top:4px;
+    font-size:13px;
+}
+
+.clear-btn{
+    background:transparent;
+    border:1px solid rgba(255,255,255,.07);
+    color:rgba(255,255,255,.4);
+    border-radius:3px;
+    padding:7px 11px;
+    font-size:8px;
+    cursor:pointer;
+}
+
+/* SELECTED */
+
+.selected-box{
+    display:grid;
+    grid-template-columns:170px 1fr;
+    min-height:110px;
+    background:#0b0b0b;
+    border:1px solid rgba(255,255,255,.06);
+    border-radius:3px;
+    overflow:hidden;
+}
+
+.selected-image{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.07),
+            transparent 68%
+        );
+}
+
+.selected-image img{
+    width:90%;
+    height:90%;
+    object-fit:contain;
+}
+
+.selected-info{
+    padding:15px;
+}
+
+.selected-info label{
+    display:block;
+    font-size:7px;
+    color:rgba(255,255,255,.25);
+    margin-top:8px;
+    margin-bottom:3px;
+}
+
+.selected-info label:first-child{
+    margin-top:0;
+}
+
+.selected-info strong{
+    font-size:10px;
+}
+
+/* OPTIONS */
+
+.options{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:5px;
+    margin-top:5px;
+}
+
+.option{
+    background:#0b0b0b;
+    border:1px solid rgba(255,255,255,.055);
+    border-radius:3px;
+    padding:9px;
+}
+
+.option span{
+    display:block;
+    font-size:7px;
+    opacity:.25;
+    margin-bottom:4px;
+}
+
+.option strong{
+    font-size:9px;
+}
+
+/* ACCOUNT */
+
+.account{
+    margin-top:5px;
+    padding:12px;
+    background:#0b0b0b;
+    border:1px solid rgba(255,255,255,.055);
+    border-radius:3px;
+}
+
+.account-title{
+    font-size:7px;
+    letter-spacing:1.5px;
+    opacity:.25;
+    margin-bottom:9px;
+}
+
+.account-user{
+    display:flex;
+    align-items:center;
+    gap:9px;
+}
+
+.account-avatar{
+    width:32px;
+    height:32px;
+    border-radius:3px;
+    background:#151515;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:10px;
+    font-weight:900;
+    overflow:hidden;
+}
+
+.account-avatar img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.account-user strong{
+    display:block;
+    font-size:10px;
+}
+
+.account-user small{
+    display:block;
+    margin-top:3px;
+    font-size:7px;
+    opacity:.25;
+}
+
+.account button{
+    width:100%;
+    height:34px;
+    margin-top:9px;
+    background:#111;
+    border:1px solid rgba(255,255,255,.07);
+    color:#fff;
+    border-radius:3px;
+    font-size:8px;
+    font-weight:800;
+    cursor:pointer;
+}
+
+.save{
+    width:100%;
+    height:40px;
+    margin-top:5px;
+    border:0;
+    border-radius:3px;
+    background:#fff;
+    color:#000;
+    font-size:9px;
+    font-weight:900;
+    cursor:pointer;
+}
+
+.save:hover{
+    background:#ddd;
+}
+
+/* EMPTY */
+
+.empty{
+    grid-column:1/-1;
+    padding:60px 20px;
+    text-align:center;
+    border:1px dashed rgba(255,255,255,.07);
+    border-radius:3px;
+}
+
+.empty strong{
+    font-size:10px;
+}
+
+.empty p{
+    margin:6px 0 0;
+    font-size:8px;
+    opacity:.3;
+}
+
+/* RESPONSIVE */
+
+@media(max-width:1200px){
+    .skin-grid,
+    .other-grid{
+        grid-template-columns:repeat(4,1fr);
+    }
+}
+
+@media(max-width:900px){
+    .skin-grid,
+    .other-grid{
+        grid-template-columns:repeat(3,1fr);
+    }
+}
+
+@media(max-width:700px){
+
+    .skin-page{
+        padding:18px;
+    }
+
+    .skin-grid,
+    .other-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .main-tabs{
+        flex-wrap:wrap;
+    }
+
+    .main-tab{
+        min-width:45%;
+    }
+
+    .options{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .selected-box{
+        grid-template-columns:1fr;
+    }
+
+    .selected-image{
+        height:110px;
+    }
+}
+
+@media(max-width:500px){
+
+    .skin-page{
+        padding:14px;
+    }
+
+    .player-bar{
+        flex-direction:column;
+    }
+
+    .player-bar button{
+        width:100%;
+        height:38px;
+    }
+
+    .skin-grid,
+    .other-grid{
+        grid-template-columns:repeat(2,1fr);
+    }
+}
+
+.option select,
+.option input{
+    width:100%;
+    height:28px;
+    box-sizing:border-box;
+    padding:0 6px;
+    background:#111;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:3px;
+    color:#fff;
+    font-size:10px;
+    outline:none;
+}
+
+@media(min-width:701px){
+    .options{ grid-template-columns:repeat(3,1fr); }
+}
+
+.skin-header{ align-items:center; }
+
+[hidden]{ display:none !important; }
+
+.login-notice{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:11px 14px; margin-bottom:10px; font-size:10px;
+    background:#0c0c0c; border:1px solid rgba(255,255,255,.1); border-radius:3px;
+}
+.login-notice button{
+    border:0; border-radius:3px; background:#fff; color:#000;
+    font-size:9px; font-weight:900; padding:8px 12px; cursor:pointer;
+}
+
+.group-tabs{ display:flex; gap:5px; flex-wrap:wrap; margin-bottom:12px; }
+.group-tab{
+    height:36px; padding:0 14px; background:#0c0c0c;
+    border:1px solid rgba(255,255,255,.06); border-radius:3px;
+    color:rgba(255,255,255,.4); font-size:9px; font-weight:800; cursor:pointer;
+}
+.group-tab em{ font-style:normal; opacity:.45; margin-left:6px; }
+.group-tab:hover,.group-tab.active{ background:#151515; border-color:rgba(255,255,255,.17); color:#fff; }
+
+.weapon-grid{ display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:6px; }
+.wcard{
+    padding:0; overflow:hidden; text-align:center; cursor:pointer; color:#fff;
+    background:#0b0b0b; border:1px solid rgba(255,255,255,.055); border-radius:3px; transition:.15s;
+}
+.wcard:hover{ background:#111; border-color:rgba(255,255,255,.16); transform:translateY(-1px); }
+.wcard.active{ border-color:#fff; }
+.wcard .wimg{
+    height:96px; display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(circle at center, rgba(255,255,255,.075), transparent 68%);
+}
+.wcard .wimg img{ width:86%; height:86%; object-fit:contain; }
+.wcard strong{ display:block; padding:8px 6px 2px; font-size:10px; }
+.wcard small{
+    display:block; padding:0 6px 9px; font-size:7px; color:rgba(255,255,255,.3);
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.wcard.has small{ color:#7dffb0; }
+
+.skin-panel{ margin-top:18px; padding-top:14px; border-top:1px solid rgba(255,255,255,.08); }
+
+.sel-bar{
+    position:sticky; top:0; z-index:5; display:flex; gap:14px; align-items:center;
+    padding:10px; margin-bottom:12px; background:#0b0b0b;
+    border:1px solid rgba(255,255,255,.12); border-radius:3px;
+}
+.sel-pic{
+    flex:none; width:130px; height:70px; display:flex; align-items:center; justify-content:center;
+    font-size:9px; font-weight:900; text-align:center; opacity:.9;
+    background:radial-gradient(circle, rgba(255,255,255,.07), transparent 68%);
+}
+.sel-pic img{ width:100%; height:100%; object-fit:contain; }
+.sel-main{ flex:1; min-width:0; }
+.sel-main small{ display:block; font-size:8px; color:rgba(255,255,255,.35); }
+.sel-main strong{ display:block; font-size:13px; margin:3px 0 8px; }
+.sel-options{ display:flex; gap:8px; flex-wrap:wrap; }
+.sel-options label{ font-size:7px; color:rgba(255,255,255,.3); letter-spacing:1px; }
+.sel-options select,.sel-options input{
+    display:block; margin-top:3px; height:28px; padding:0 7px; box-sizing:border-box;
+    background:#111; border:1px solid rgba(255,255,255,.08); border-radius:3px;
+    color:#fff; font-size:10px; outline:none;
+}
+.sel-options input{ width:90px; }
+.sel-actions{ display:flex; flex-direction:column; gap:5px; width:110px; }
+.sel-actions .save{ margin:0; height:34px; }
+.sel-actions .clear-btn{ padding:7px 0; }
+
+@media(max-width:1200px){ .weapon-grid{ grid-template-columns:repeat(5,1fr); } }
+@media(max-width:900px){ .weapon-grid{ grid-template-columns:repeat(4,1fr); } }
+@media(max-width:700px){
+    .weapon-grid{ grid-template-columns:repeat(3,1fr); }
+    .sel-bar{ flex-wrap:wrap; }
+    .sel-pic{ width:100%; }
+    .sel-actions{ flex-direction:row; width:100%; }
+    .sel-actions button{ flex:1; }
+}
+@media(max-width:480px){ .weapon-grid{ grid-template-columns:repeat(2,1fr); } }
+</style>
 </head>
 
 <body>
 
+<div class="bg-glow"></div>
+
 <div class="app">
 
-    <aside class="sidebar">
+<!-- =====================================================
+     SIDEBAR
+     ===================================================== -->
 
-        <div class="brand">
-            <div class="brand-mark">V</div>
+<aside class="sidebar">
+
+    <div class="brand">
+        <span>VYRE</span><b>.MN</b>
+    </div>
+
+    <div class="brand-line"></div>
+
+    <nav>
+        <a class="nav-item" href="/"><span>⌂</span> HOME</a>
+        <a class="nav-item" href="/servers"><span>▣</span> SERVERS</a>
+        <a class="nav-item active" href="/skins"><span>◈</span> SKINCHANGER</a>
+        <a class="nav-item" href="/leaderboard"><span>♛</span> LEADERBOARD</a>
+        <a class="nav-item" href="/players"><span>◉</span> PLAYERS</a>
+        <a class="nav-item" href="/clans"><span>◆</span> CLANS</a>
+        <a class="nav-item" href="https://discord.gg/mAa7dct57" target="_blank" rel="noopener noreferrer"><span>◌</span> DISCORD</a>
+        <a class="nav-item" href="/profile"><span>◉</span> PROFILE</a>
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <div class="system-status">
+            <i></i>
             <div>
-                <strong>VYRE</strong>
-                <span>.MN</span>
+                <strong>VYRE NETWORK</strong>
+                <small>ONLINE</small>
             </div>
         </div>
 
-        <div class="sidebar-label">NAVIGATION</div>
+        <button class="steam-login" onclick="steamLogin()">
+            <span>◉</span>
+            <b class="steam-label">STEAM LOGIN</b>
+        </button>
 
-        <nav class="nav">
-            <a href="/" class="nav-item">
-                <span>⌂</span> HOME
-            </a>
+    </div>
 
-            <a href="/servers" class="nav-item">
-                <span>▣</span> SERVERS
-            </a>
+</aside>
 
-            <a href="/skins" class="nav-item active">
-                <span>◈</span> SKINCHANGER
-            </a>
 
-            <a href="/leaderboard" class="nav-item">
-                <span>♛</span> LEADERBOARD
-            </a>
+<!-- =====================================================
+     MAIN
+     ===================================================== -->
 
-            <a href="/players" class="nav-item">
-                <span>◉</span> PLAYERS
-            </a>
+<main class="main">
 
-            <a href="/clans" class="nav-item">
-                <span>◆</span> CLANS
-            </a>
+<header class="topbar">
+    <div>
+        <span class="top-live"></span>
+        MONGOLIA
+    </div>
 
-            <a href="/discord" class="nav-item">
-                <span>◌</span> DISCORD
-            </a>
-        </nav>
+    <div>CS2 COMMUNITY</div>
+</header>
 
-        <div class="sidebar-bottom">
 
-            <div class="sidebar-status">
-                <span class="status-dot"></span>
-                VYRE NETWORK ONLINE
+<section class="skin-page">
+
+<div class="skin-header">
+
+    <div>
+        <h1>SKINCHANGER</h1>
+        <p id="accountLine">Зэвсгээ сонгоод, дараа нь skin-ээ сонгоно уу.</p>
+    </div>
+
+    <div class="team-filter">
+        <button class="active" onclick="teamFilter('ALL',this)">ALL</button>
+        <button onclick="teamFilter('T',this)">T</button>
+        <button onclick="teamFilter('CT',this)">CT</button>
+    </div>
+
+</div>
+
+<div id="loginNotice" class="login-notice" hidden>
+    Skin хадгалахын тулд Steam-ээр нэвтэрнэ үү.
+    <button type="button" onclick="steamLogin()">STEAM LOGIN</button>
+</div>
+
+<div id="groupTabs" class="group-tabs"></div>
+
+<div id="weaponGrid" class="weapon-grid">Loading...</div>
+
+<div id="skinPanel" class="skin-panel" hidden>
+
+    <div class="sel-bar">
+
+        <div id="selectedPicture" class="sel-pic"><span>VYRE</span></div>
+
+        <div class="sel-main">
+            <small id="selectedWeapon">—</small>
+            <strong id="selectedSkin">NONE</strong>
+            <span id="selectedSkinSmall" hidden></span>
+
+            <div class="sel-options">
+                <label>WEAR
+                    <select id="settingWear">
+                        <option value="FN">FACTORY NEW</option>
+                        <option value="MW">MINIMAL WEAR</option>
+                        <option value="FT">FIELD-TESTED</option>
+                        <option value="WW">WELL-WORN</option>
+                        <option value="BS">BATTLE-SCARRED</option>
+                    </select>
+                </label>
+                <label>FLOAT
+                    <input id="settingFloat" type="number" min="0" max="1" step="0.001" value="0.01">
+                </label>
+                <label>PATTERN
+                    <input id="settingPattern" type="number" min="0" max="1000" step="1" value="0">
+                </label>
             </div>
-
-            <button class="steam-login" onclick="steamLogin()">
-                STEAM LOGIN
-                <span>↗</span>
-            </button>
-
         </div>
 
-    </aside>
+        <div class="sel-actions">
+            <button class="save" type="button" onclick="saveLoadout()">SAVE</button>
+            <button class="clear-btn" type="button" onclick="clearSelected()">RESET</button>
+            <button class="clear-btn" type="button" onclick="closePanel()">CLOSE ✕</button>
+        </div>
 
+    </div>
 
-    <main class="main">
+    <div class="collection-head">
+        <div>
+            <small>COLLECTION</small>
+            <strong id="weaponTitle">—</strong>
+        </div>
+        <span id="skinCount">0 SKINS</span>
+    </div>
 
-        <header class="topbar">
+    <div class="filter-bar">
+        <div class="skin-search">
+            <span>⌕</span>
+            <input id="skinSearch" type="text" placeholder="Skin хайх...">
+        </div>
+    </div>
 
-            <div class="topbar-left">
-                <span class="page-location">VYRE.MN</span>
-                <span class="slash">/</span>
-                <span class="page-current">SKINCHANGER</span>
-            </div>
+    <div id="skinGrid" class="skin-grid"></div>
 
-            <div class="topbar-right">
+</div>
 
-                <div class="network-indicator">
-                    <span></span>
-                    ONLINE
-                </div>
+</section>
 
-                <button class="top-steam" onclick="steamLogin()">
-                    STEAM LOGIN
-                </button>
 
-            </div>
+<footer class="footer">
 
-        </header>
+    <div>
+        <strong>VYRE.MN</strong>
+        <span>CS2 COMMUNITY</span>
+    </div>
 
+    <div>
+        © 2026 VYRE.MN
+    </div>
 
-        <section class="vyre-skins">
+</footer>
 
-            <div class="skins-heading">
-
-                <div>
-                    <div class="eyebrow">VYRE.MN / LOADOUT</div>
-
-                    <h1>SKINCHANGER</h1>
-
-                    <p>
-                        Customize your Counter-Strike 2 loadout.
-                        Select a weapon to browse its skins.
-                    </p>
-                </div>
-
-            </div>
-
-
-            <!-- MAIN CATEGORY -->
-
-            <div class="skins-tabs">
-
-                <button
-                    class="skins-tab active"
-                    onclick="skinCategory('weapons', this)">
-                    WEAPON SKINS
-                </button>
-
-                <button
-                    class="skins-tab"
-                    onclick="skinCategory('agents', this)">
-                    AGENTS
-                </button>
-
-                <button
-                    class="skins-tab"
-                    onclick="skinCategory('music', this)">
-                    MUSIC KIT
-                </button>
-
-                <button
-                    class="skins-tab"
-                    onclick="skinCategory('coins', this)">
-                    COINS
-                </button>
-
-            </div>
-
-
-            <!-- WEAPON SELECTOR -->
-
-            <div id="weaponArea">
-
-                <div class="skins-toolbar">
-
-                    <div class="weapon-select">
-
-                        <label>WEAPON</label>
-
-                        <select id="weaponSelect" onchange="changeWeapon(this.value)">
-
-                            <option value="AK-47">AK-47</option>
-                            <option value="M4A4">M4A4</option>
-                            <option value="M4A1-S">M4A1-S</option>
-                            <option value="AWP">AWP</option>
-                            <option value="Glock-18">Glock-18</option>
-                            <option value="USP-S">USP-S</option>
-                            <option value="Desert Eagle">Desert Eagle</option>
-                            <option value="P250">P250</option>
-                            <option value="FAMAS">FAMAS</option>
-                            <option value="Galil AR">Galil AR</option>
-                            <option value="AUG">AUG</option>
-                            <option value="SG 553">SG 553</option>
-                            <option value="SSG 08">SSG 08</option>
-                            <option value="SCAR-20">SCAR-20</option>
-                            <option value="G3SG1">G3SG1</option>
-                            <option value="MAC-10">MAC-10</option>
-                            <option value="MP9">MP9</option>
-                            <option value="MP7">MP7</option>
-                            <option value="MP5-SD">MP5-SD</option>
-                            <option value="UMP-45">UMP-45</option>
-                            <option value="P90">P90</option>
-                            <option value="PP-Bizon">PP-Bizon</option>
-                            <option value="Nova">Nova</option>
-                            <option value="XM1014">XM1014</option>
-                            <option value="MAG-7">MAG-7</option>
-                            <option value="Sawed-Off">Sawed-Off</option>
-                            <option value="M249">M249</option>
-                            <option value="Negev">Negev</option>
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="team-switch">
-
-                        <button
-                            class="team-switch-btn active"
-                            onclick="teamFilter('ALL', this)">
-                            ALL
-                        </button>
-
-                        <button
-                            class="team-switch-btn"
-                            onclick="teamFilter('T', this)">
-                            T
-                        </button>
-
-                        <button
-                            class="team-switch-btn"
-                            onclick="teamFilter('CT', this)">
-                            CT
-                        </button>
-
-                    </div>
-
-
-                    <div class="skin-search">
-
-                        <span>⌕</span>
-
-                        <input
-                            id="skinSearch"
-                            type="text"
-                            placeholder="Search by name..."
-                            oninput="searchSkins()">
-
-                    </div>
-
-                </div>
-
-
-                <!-- SKIN COLLECTION -->
-
-                <div class="collection-title">
-
-                    <div>
-                        <span>SKIN COLLECTION</span>
-                        <strong id="weaponTitle">AK-47</strong>
-                    </div>
-
-                    <small id="skinCount">
-                        0 SKINS
-                    </small>
-
-                </div>
-
-
-                <div
-                    id="skinGrid"
-                    class="mirage-style-grid">
-                </div>
-
-            </div>
-
-
-            <!-- OTHER CATEGORY -->
-
-            <div
-                id="otherArea"
-                class="other-area"
-                style="display:none;">
-
-                <div class="other-header">
-
-                    <span>COLLECTION</span>
-
-                    <h2 id="otherTitle">
-                        AGENTS
-                    </h2>
-
-                </div>
-
-                <div class="other-empty">
-
-                    <div>◈</div>
-
-                    <strong id="otherMessage">
-                        AGENTS COLLECTION
-                    </strong>
-
-                    <p>
-                        Collection will be available here.
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <!-- SELECTED -->
-
-            <div class="selected-loadout">
-
-                <div class="selected-title">
-
-                    <div>
-                        <span>SELECTED SKIN</span>
-
-                        <strong id="selectedSkin">
-                            NONE
-                        </strong>
-                    </div>
-
-                    <button onclick="clearSelected()">
-                        CLEAR
-                    </button>
-
-                </div>
-
-
-                <div
-                    id="selectedCard"
-                    class="selected-card">
-
-                    <div class="selected-image">
-                        VYRE
-                    </div>
-
-                    <div class="selected-info">
-
-                        <small>WEAPON</small>
-
-                        <strong id="selectedWeapon">
-                            —
-                        </strong>
-
-                        <small>SKIN</small>
-
-                        <strong id="selectedSkinSmall">
-                            NONE
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <!-- STEAM -->
-
-                <div class="steam-loadout">
-
-                    <div class="steam-loadout-header">
-                        STEAM ACCOUNT
-                    </div>
-
-                    <div
-                        id="steamDisconnected"
-                        class="steam-user-row">
-
-                        <div class="steam-circle">
-                            S
-                        </div>
-
-                        <div>
-
-                            <strong>NOT CONNECTED</strong>
-
-                            <small>
-                                Connect Steam to use skins
-                            </small>
-
-                        </div>
-
-                    </div>
-
-
-                    <div
-                        id="steamConnected"
-                        class="steam-user-row"
-                        style="display:none;">
-
-                        <div class="steam-circle">
-                            S
-                        </div>
-
-                        <div>
-
-                            <strong id="steamName">
-                                Steam User
-                            </strong>
-
-                            <small>CONNECTED</small>
-
-                        </div>
-
-                    </div>
-
-
-                    <button
-                        class="steam-connect"
-                        onclick="steamLogin()">
-
-                        CONNECT STEAM
-
-                    </button>
-
-                </div>
-
-
-                <button
-                    class="save-loadout"
-                    onclick="saveLoadout()">
-
-                    SAVE LOADOUT
-                    <span>→</span>
-
-                </button>
-
-            </div>
-
-        </section>
-
-
-        <footer class="footer">
-
-            <div>
-                <strong>VYRE.MN</strong>
-                <span>CS2 COMMUNITY</span>
-            </div>
-
-            <div>
-                © 2026 VYRE.MN
-            </div>
-
-        </footer>
-
-    </main>
+</main>
 
 </div>
 
 
-<script src="/script.js"></script>
+<script src="/skinchanger.js"></script>
 
 </body>
 </html>
