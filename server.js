@@ -17,6 +17,9 @@ const db = new Database("vyre.db");
 
 db.pragma("journal_mode = WAL");
 
+// avatar column (safe to run many times)
+try { db.exec("ALTER TABLE players ADD COLUMN avatar TEXT"); } catch (e) { /* already exists */ }
+
 db.exec(`
 CREATE TABLE IF NOT EXISTS players (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -201,21 +204,23 @@ passport.use(
 
                     db.prepare(`
                         INSERT INTO players
-                        (steam_id, name)
-                        VALUES (?, ?)
+                        (steam_id, name, avatar)
+                        VALUES (?, ?, ?)
                     `).run(
                         steamId,
-                        name
+                        name,
+                        avatar
                     );
 
                 } else {
 
                     db.prepare(`
                         UPDATE players
-                        SET name = ?
+                        SET name = ?, avatar = COALESCE(?, avatar)
                         WHERE steam_id = ?
                     `).run(
                         name,
+                        avatar,
                         steamId
                     );
 
@@ -297,19 +302,24 @@ app.get(
 );
 
 
-app.get(
-    "/api/auth/steam/return",
-
-    passport.authenticate("steam", {
-        failureRedirect: "/"
-    }),
-
-    (req, res) => {
-
-        res.redirect("/");
-
-    }
-);
+app.get("/api/auth/steam/return", (req, res, next) => {
+    passport.authenticate("steam", { keepSessionInfo: true }, (err, user, info) => {
+        if (err) {
+            console.error("STEAM LOGIN ERROR:", err);
+            return res.status(500).send("Steam login error: " + (err.message || err));
+        }
+        if (!user) {
+            console.error("STEAM LOGIN FAILED:", info);
+            return res.status(401).send("Steam login failed: " + JSON.stringify(info || {}));
+        }
+        req.logIn(user, { keepSessionInfo: true }, (err2) => {
+            if (err2) return next(err2);
+            const to = req.session && req.session.returnTo;
+            if (req.session) delete req.session.returnTo;
+            res.redirect(to || "/profile");
+        });
+    })(req, res, next);
+});
 
 
 // =========================
@@ -861,6 +871,33 @@ app.get(
     }
 );
 
+
+
+// =========================
+// PROFILE
+// =========================
+
+app.get("/api/players/:steamId", (req, res) => {
+    const row = db
+        .prepare("SELECT steam_id, name, rank, avatar, created_at FROM players WHERE steam_id = ?")
+        .get(req.params.steamId);
+    if (!row) return res.status(404).json({ error: "Player not found" });
+    if (OWNER_IDS.includes(row.steam_id)) row.rank = "BOSS";
+    res.json(row);
+});
+
+// /profile -> own profile, or Steam login first if not logged in
+app.get("/profile", (req, res) => {
+    if (req.isAuthenticated()) {
+        return res.redirect("/profile/" + req.user.steam_id);
+    }
+    req.session.returnTo = "/profile";
+    res.redirect("/api/auth/steam");
+});
+
+app.get("/profile/:steamId", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "profile.html"));
+});
 
 app.get(
     "/discord",
