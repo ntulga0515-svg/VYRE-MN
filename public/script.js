@@ -745,51 +745,6 @@ function clearSelected() {
 
 
 /* =========================================================
-   STEAM LOGIN — DEMO
-   ========================================================= */
-
-function steamLogin() {
-
-    const disconnected =
-        document.getElementById(
-            "steamDisconnected"
-        );
-
-    const connected =
-        document.getElementById(
-            "steamConnected"
-        );
-
-
-    if (!disconnected || !connected) {
-
-        alert(
-            "STEAM AUTH WILL BE CONNECTED LATER."
-        );
-
-        return;
-
-    }
-
-
-    disconnected.style.display = "none";
-    connected.style.display = "flex";
-
-
-    const name =
-        document.getElementById("steamName");
-
-    if (name) {
-
-        name.textContent =
-            "Steam User";
-
-    }
-
-}
-
-
-/* =========================================================
    SAVE LOADOUT
    ========================================================= */
 
