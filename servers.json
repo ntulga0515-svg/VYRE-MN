@@ -1,5 +1,5 @@
 [
-  { "name": "Match #01", "ip": "65.108.143.42:10225; password mrqj", "port": 27015 },
+  { "name": "Match #01", "ip": "connect 65.108.143.42:10225; password mrqj", "port": 27015 },
   { "name": "Match #02", "ip": "127.0.0.1", "port": 27016 },
   { "name": "Match #03", "ip": "127.0.0.1", "port": 27017 },
   { "name": "Match #04", "ip": "127.0.0.1", "port": 27018 },
