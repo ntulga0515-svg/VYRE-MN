@@ -646,8 +646,22 @@ let liveCache = { t: 0, data: [] };
 function readServerList() {
     try {
         const raw = fsLive.readFileSync(path.join(__dirname, "servers.json"), "utf8");
-        const list = JSON.parse(raw);
-        return Array.isArray(list) ? list : [];
+        const cfg = JSON.parse(raw);
+        if (Array.isArray(cfg)) return cfg;
+
+        // generator form: { ip, startPort, count, namePrefix }
+        const list = [];
+        const count = Number(cfg.count) || 0;
+        const start = Number(cfg.startPort) || 27015;
+        const prefix = cfg.namePrefix || "Match";
+        for (let i = 0; i < count; i++) {
+            list.push({
+                name: prefix + " #" + String(i + 1).padStart(2, "0"),
+                ip: cfg.ip,
+                port: start + i
+            });
+        }
+        return list;
     } catch (e) {
         console.error("servers.json error:", e.message);
         return [];
