@@ -37,8 +37,7 @@ function renderAccount() {
     $("loginNotice").hidden = on;
     if (on) $("accountLine").textContent = (S.user.name || "Steam User") + " · нэвтэрсэн";
     const label = on ? "LOGOUT" : "STEAM LOGIN";
-    document.querySelectorAll(".top-steam").forEach(b => (b.textContent = label));
-    document.querySelectorAll(".steam-login").forEach(b => (b.firstChild.textContent = label + " "));
+    document.querySelectorAll(".steam-label").forEach(b => (b.textContent = label));
 }
 
 /* ---------- data ---------- */

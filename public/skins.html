@@ -777,6 +777,8 @@
 
 <body>
 
+<div class="bg-glow"></div>
+
 <div class="app">
 
 <!-- =====================================================
@@ -786,75 +788,34 @@
 <aside class="sidebar">
 
     <div class="brand">
-        <div class="brand-mark">V</div>
-
-        <div>
-            <strong>VYRE</strong>
-            <span>.MN</span>
-        </div>
+        <span>VYRE</span><b>.MN</b>
     </div>
 
-    <div class="sidebar-label">
-        NAVIGATION
-    </div>
+    <div class="brand-line"></div>
 
-    <nav class="nav">
-
-        <a href="/" class="nav-item">
-            <span>⌂</span>
-            HOME
-        </a>
-
-        <a href="/servers" class="nav-item">
-            <span>▣</span>
-            SERVERS
-        </a>
-
-        <a href="/skins" class="nav-item active">
-            <span>◈</span>
-            SKINCHANGER
-        </a>
-
-        <a href="/leaderboard" class="nav-item">
-            <span>♛</span>
-            LEADERBOARD
-        </a>
-
-        <a href="/players" class="nav-item">
-            <span>◉</span>
-            PLAYERS
-        </a>
-
-        <a href="/clans" class="nav-item">
-            <span>◆</span>
-            CLANS
-        </a>
-
-        <a
-            href="https://discord.gg/mAa7dct57"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="nav-item"
-        >
-            <span>◌</span>
-            DISCORD
-        </a>
-
+    <nav>
+        <a class="nav-item" href="/"><span>⌂</span> HOME</a>
+        <a class="nav-item" href="/servers"><span>▣</span> SERVERS</a>
+        <a class="nav-item active" href="/skins"><span>◈</span> SKINCHANGER</a>
+        <a class="nav-item" href="/leaderboard"><span>♛</span> LEADERBOARD</a>
+        <a class="nav-item" href="/players"><span>◉</span> PLAYERS</a>
+        <a class="nav-item" href="/clans"><span>◆</span> CLANS</a>
+        <a class="nav-item" href="https://discord.gg/mAa7dct57" target="_blank" rel="noopener noreferrer"><span>◌</span> DISCORD</a>
     </nav>
 
     <div class="sidebar-bottom">
 
-        <div class="sidebar-status">
-            <span class="status-dot"></span>
-            VYRE NETWORK ONLINE
+        <div class="system-status">
+            <i></i>
+            <div>
+                <strong>VYRE NETWORK</strong>
+                <small>ONLINE</small>
+            </div>
         </div>
 
-        <button
-            class="steam-login"
-            onclick="steamLogin()"
-        >
-            STEAM LOGIN
-            <span>↗</span>
+        <button class="steam-login" onclick="steamLogin()">
+            <span>◉</span>
+            <b class="steam-label">STEAM LOGIN</b>
         </button>
 
     </div>
@@ -869,29 +830,12 @@
 <main class="main">
 
 <header class="topbar">
-
-    <div class="topbar-left">
-        <span class="page-location">VYRE.MN</span>
-        <span class="slash">/</span>
-        <span class="page-current">SKINCHANGER</span>
+    <div>
+        <span class="top-live"></span>
+        MONGOLIA
     </div>
 
-    <div class="topbar-right">
-
-        <div class="network-indicator">
-            <span></span>
-            ONLINE
-        </div>
-
-        <button
-            class="top-steam"
-            onclick="steamLogin()"
-        >
-            STEAM LOGIN
-        </button>
-
-    </div>
-
+    <div>CS2 COMMUNITY</div>
 </header>
 
 
