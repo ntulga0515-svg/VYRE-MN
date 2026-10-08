@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>VYRE.MN — Admin Panel</title>
+
+    <link rel="stylesheet" href="/style.css">
+
+    <style>
+        .admin-page {
+            padding: 35px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .admin-header h1 {
+            margin: 0;
+            font-size: 34px;
+        }
+
+        .admin-header p {
+            color: #777;
+            margin-top: 7px;
+        }
+
+        .admin-badge {
+            padding: 10px 18px;
+            border: 1px solid rgba(255,255,255,.08);
+            border-radius: 10px;
+            background: rgba(255,255,255,.03);
+            color: #ff3b4f;
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .stat-box {
+            background: rgba(255,255,255,.025);
+            border: 1px solid rgba(255,255,255,.07);
+            border-radius: 14px;
+            padding: 22px;
+        }
+
+        .stat-title {
+            color: #777;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-number {
+            font-size: 30px;
+            font-weight: 800;
+            margin-top: 8px;
+        }
+
+        .admin-grid {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 20px;
+        }
+
+        .admin-card {
+            background: rgba(255,255,255,.025);
+            border: 1px solid rgba(255,255,255,.07);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 17px;
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            color: #666;
+            font-size: 11px;
+            text-transform: uppercase;
+            padding: 12px;
+            border-bottom: 1px solid rgba(255,255,255,.06);
+        }
+
+        td {
+            padding: 14px 12px;
+            border-bottom: 1px solid rgba(255,255,255,.04);
+            font-size: 13px;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rank {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .rank-PLAYER {
+            background: rgba(255,255,255,.07);
+            color: #aaa;
+        }
+
+        .rank-VIP {
+            background: rgba(255,196,0,.1);
+            color: #ffc400;
+        }
+
+        .rank-ADMIN {
+            background: rgba(0,120,255,.12);
+            color: #4295ff;
+        }
+
+        .rank-BOSS {
+            background: rgba(255,40,60,.12);
+            color: #ff4052;
+        }
+
+        .select {
+            background: #0c0d11;
+            color: white;
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 7px;
+            padding: 7px 9px;
+            outline: none;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 11px;
+        }
+
+        .btn-save {
+            background: #ff3348;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #ff1f36;
+        }
+
+        .server-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(255,255,255,.05);
+        }
+
+        .server-row:last-child {
+            border-bottom: none;
+        }
+
+        .server-name {
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .server-type {
+            color: #666;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .server-status {
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .online {
+            color: #35d07f;
+        }
+
+        .offline {
+            color: #ff4658;
+        }
+
+        .maintenance {
+            color: #ffc400;
+        }
+
+        .empty {
+            padding: 30px;
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+        }
+
+        .danger-btn {
+            background: rgba(255,50,70,.1);
+            color: #ff4052;
+            border: 1px solid rgba(255,50,70,.15);
+        }
+
+        @media(max-width: 1100px) {
+            .admin-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .admin-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media(max-width: 650px) {
+            .admin-page {
+                padding: 20px;
+            }
+
+            .admin-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .admin-header {
+                align-items: flex-start;
+                gap: 15px;
+                flex-direction: column;
+            }
+        }
+    </style>
+    <script>document.documentElement.classList.add('js')</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;700;800;900&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#05060a">
+    <link rel="stylesheet" href="/theme.css">
+    <link rel="stylesheet" href="/polish.css">
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- SIDEBAR -->
+
+    <aside class="sidebar" id="sidebar">
+
+    <a class="brand" href="/" aria-label="VYRE.MN">
+        <span class="brand-mark">V</span>
+        <span class="brand-word"><span>VYRE</span><b>.MN</b></span>
+    </a>
+
+    <div class="brand-line"></div>
+
+    <nav>
+        <a class="nav-item" href="/"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg></span><span class="lbl">HOME</span></a>
+        <a class="nav-item" href="/servers"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M7 7h.01M7 17h.01"/></svg></span><span class="lbl">SERVERS</span></a>
+        <a class="nav-item" href="/skins"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 6-9 14L3 8z"/><path d="M3 8h18M12 2v20M8 8l4 14 4-14"/></svg></span><span class="lbl">SKINCHANGER</span></a>
+        <a class="nav-item" href="/leaderboard"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v5a5 5 0 01-10 0z"/><path d="M7 6H4v2a3 3 0 003 3M17 6h3v2a3 3 0 01-3 3M12 14v4M8 21h8M10 18h4"/></svg></span><span class="lbl">LEADERBOARD</span></a>
+        <a class="nav-item" href="/players"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.6a3.5 3.5 0 010 6.8M18.5 14.4c1.9.8 3 2.7 3 5.6"/></svg></span><span class="lbl">PLAYERS</span></a>
+        <a class="nav-item" href="/clans"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l8 3v6c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10v-6z"/><path d="M9 12l2.2 2.2L15.5 10"/></svg></span><span class="lbl">CLANS</span></a>
+        <a class="nav-item" href="/discord" target="_blank" rel="noopener noreferrer"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16a1 1 0 011 1v10a1 1 0 01-1 1h-8l-5 4v-4H4a1 1 0 01-1-1V6a1 1 0 011-1z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/></svg></span><span class="lbl">DISCORD</span></a>
+        <a class="nav-item" href="/profile"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7"/></svg></span><span class="lbl">PROFILE</span></a>
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <div class="system-status">
+            <i></i>
+            <div>
+                <strong>VYRE NETWORK</strong>
+                <small>ONLINE</small>
+            </div>
+        </div>
+
+        <button class="steam-login" type="button" onclick="steamLogin()">
+            <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><circle cx="15.5" cy="9.5" r="2.5"/><path d="M3 12.6l5.2 2.1M9.5 17a2 2 0 100-4 2 2 0 000 4z"/></svg></span>
+            <b class="steam-label">STEAM LOGIN</b>
+        </button>
+
+    </div>
+
+</aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Menu" aria-controls="sidebar" aria-expanded="false"><span></span><span></span><span></span></button>
+
+            <div class="topbar-title">
+                ADMIN CONTROL
+            </div>
+
+            <div class="topbar-right">
+                VYRE.MN
+            </div>
+
+        </header>
+
+
+        <section class="admin-page">
+
+            <div class="admin-header">
+
+                <div>
+                    <h1>Admin Panel</h1>
+                    <p>Manage VYRE.MN community network</p>
+                </div>
+
+                <div class="admin-badge">
+                    BOSS ACCESS
+                </div>
+
+            </div>
+
+
+            <!-- STATS -->
+
+            <div class="admin-stats">
+
+                <div class="stat-box">
+                    <div class="stat-title">
+                        Players
+                    </div>
+
+                    <div class="stat-number" id="playerCount">
+                        0
+                    </div>
+                </div>
+
+
+                <div class="stat-box">
+                    <div class="stat-title">
+                        Servers
+                    </div>
+
+                    <div class="stat-number" id="serverCount">
+                        0
+                    </div>
+                </div>
+
+
+                <div class="stat-box">
+                    <div class="stat-title">
+                        Online
+                    </div>
+
+                    <div class="stat-number" id="onlineCount">
+                        0
+                    </div>
+                </div>
+
+
+                <div class="stat-box">
+                    <div class="stat-title">
+                        Banned
+                    </div>
+
+                    <div class="stat-number" id="banCount">
+                        0
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- CONTENT -->
+
+            <div class="admin-grid">
+
+
+                <!-- PLAYERS -->
+
+                <div class="admin-card">
+
+                    <div class="card-header">
+
+                        <h2>Players</h2>
+
+                        <button
+                            class="btn btn-save"
+                            onclick="loadPlayers()">
+                            REFRESH
+                        </button>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div class="table-wrap">
+
+                            <table>
+
+                                <thead>
+
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Steam ID</th>
+                                        <th>Rank</th>
+                                        <th>Action</th>
+                                    </tr>
+
+                                </thead>
+
+                                <tbody id="playersTable">
+
+                                </tbody>
+
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SERVERS -->
+
+                <div class="admin-card">
+
+                    <div class="card-header">
+
+                        <h2>Servers</h2>
+
+                        <button
+                            class="btn btn-save"
+                            onclick="loadServers()">
+                            REFRESH
+                        </button>
+
+                    </div>
+
+
+                    <div class="card-body">
+
+                        <div id="serversList"></div>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+
+async function loadPlayers() {
+
+    try {
+
+        const response = await fetch("/api/players");
+
+        const players = await response.json();
+
+        document.getElementById("playerCount").textContent =
+            players.length;
+
+        const table =
+            document.getElementById("playersTable");
+
+        table.innerHTML = "";
+
+        if (players.length === 0) {
+
+            table.innerHTML = `
+                <tr>
+                    <td colspan="4" class="empty">
+                        No players yet
+                    </td>
+                </tr>
+            `;
+
+            return;
+        }
+
+        players.forEach(player => {
+
+            table.innerHTML += `
+
+                <tr>
+
+                    <td>
+                        <strong>${escapeHtml(player.name)}</strong>
+                    </td>
+
+                    <td>
+                        <span style="color:#777">
+                            ${escapeHtml(player.steam_id)}
+                        </span>
+                    </td>
+
+                    <td>
+
+                        <span class="rank rank-${player.rank}">
+                            ${player.rank}
+                        </span>
+
+                    </td>
+
+                    <td>
+
+                        <select
+                            class="select"
+                            onchange="changeRank('${player.steam_id}', this.value)">
+
+                            <option value="PLAYER"
+                                ${player.rank === "PLAYER" ? "selected" : ""}>
+                                PLAYER
+                            </option>
+
+                            <option value="VIP"
+                                ${player.rank === "VIP" ? "selected" : ""}>
+                                VIP
+                            </option>
+
+                            <option value="ADMIN"
+                                ${player.rank === "ADMIN" ? "selected" : ""}>
+                                ADMIN
+                            </option>
+
+                            <option value="BOSS"
+                                ${player.rank === "BOSS" ? "selected" : ""}>
+                                BOSS
+                            </option>
+
+                        </select>
+
+                    </td>
+
+                </tr>
+            `;
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+}
+
+
+async function changeRank(steamId, rank) {
+
+    const response = await fetch(
+        "/api/players/rank",
+        {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                steam_id: steamId,
+                rank: rank
+            })
+        }
+    );
+
+    const result = await response.json();
+
+    if (result.success) {
+
+        loadPlayers();
+
+    } else {
+
+        alert(result.error || "Failed");
+
+    }
+}
+
+
+async function loadServers() {
+
+    try {
+
+        const response =
+            await fetch("/api/servers");
+
+        const servers =
+            await response.json();
+
+        document.getElementById("serverCount")
+            .textContent = servers.length;
+
+        const online =
+            servers.filter(
+                server => server.status === "online"
+            ).length;
+
+        document.getElementById("onlineCount")
+            .textContent = online;
+
+        const list =
+            document.getElementById("serversList");
+
+        list.innerHTML = "";
+
+        servers.forEach(server => {
+
+            list.innerHTML += `
+
+                <div class="server-row">
+
+                    <div>
+
+                        <div class="server-name">
+                            ${escapeHtml(server.name)}
+                        </div>
+
+                        <div class="server-type">
+                            ${escapeHtml(server.type)}
+                        </div>
+
+                    </div>
+
+                    <div>
+
+                        <span class="server-status ${server.status}">
+                            ${server.status}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            `;
+        });
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+}
+
+
+async function loadBans() {
+
+    try {
+
+        const response =
+            await fetch("/api/bans");
+
+        const bans =
+            await response.json();
+
+        document.getElementById("banCount")
+            .textContent = bans.length;
+
+    } catch (error) {
+
+        console.error(error);
+
+    }
+}
+
+
+function escapeHtml(text) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        text ?? "";
+
+    return div.innerHTML;
+}
+
+
+loadPlayers();
+loadServers();
+loadBans();
+
+</script>
+
+<script src="/auth.js"></script>
+<script src="/fx.js" defer></script>
+</body>
+</html>
