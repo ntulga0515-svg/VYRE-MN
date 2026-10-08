@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Clans — VYRE.MN</title>
+
+    <link rel="stylesheet" href="/style.css">
+
+    <style>
+        .clans-page {
+            padding: 45px;
+        }
+
+        .page-header {
+            margin-bottom: 35px;
+        }
+
+        .page-header .eyebrow {
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: #777c86;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .page-header h1 {
+            margin: 0;
+            font-size: 42px;
+            line-height: 1;
+            letter-spacing: -1.5px;
+        }
+
+        .page-header h1 span {
+            color: #777c86;
+        }
+
+        .page-header p {
+            margin-top: 14px;
+            color: #777c86;
+            font-size: 14px;
+        }
+
+        .clan-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+        }
+
+        .clan-count {
+            color: #777c86;
+            font-size: 13px;
+        }
+
+        .create-clan {
+            border: 1px solid rgba(255,255,255,.1);
+            background: rgba(255,255,255,.045);
+            color: white;
+            padding: 11px 17px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 800;
+            transition: .2s;
+        }
+
+        .create-clan:hover {
+            background: rgba(255,255,255,.08);
+            transform: translateY(-1px);
+        }
+
+        .clan-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .clan-card {
+            position: relative;
+            padding: 24px;
+            min-height: 190px;
+
+            border: 1px solid rgba(255,255,255,.07);
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.045),
+                    rgba(255,255,255,.015)
+                );
+
+            border-radius: 12px;
+            transition: .2s;
+        }
+
+        .clan-card:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255,255,255,.14);
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.065),
+                    rgba(255,255,255,.02)
+                );
+        }
+
+        .clan-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 25px;
+        }
+
+        .clan-logo {
+            width: 50px;
+            height: 50px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 10px;
+
+            background: rgba(255,255,255,.055);
+            border: 1px solid rgba(255,255,255,.08);
+
+            font-size: 17px;
+            font-weight: 900;
+            color: white;
+        }
+
+        .clan-tag {
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: #777c86;
+        }
+
+        .clan-card h3 {
+            margin: 0;
+            font-size: 20px;
+            color: white;
+        }
+
+        .clan-card p {
+            margin: 7px 0 20px;
+            color: #777c86;
+            font-size: 12px;
+        }
+
+        .clan-info {
+            display: flex;
+            gap: 25px;
+        }
+
+        .clan-stat strong {
+            display: block;
+            color: white;
+            font-size: 14px;
+        }
+
+        .clan-stat span {
+            display: block;
+            margin-top: 3px;
+            color: #60656e;
+            font-size: 10px;
+            letter-spacing: .7px;
+        }
+
+        .empty-clans {
+            grid-column: 1 / -1;
+
+            padding: 80px 20px;
+
+            text-align: center;
+
+            border: 1px dashed rgba(255,255,255,.08);
+            border-radius: 12px;
+
+            color: #666b75;
+        }
+
+        .empty-clans strong {
+            display: block;
+            color: #969ba4;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 1000px) {
+            .clan-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 700px) {
+            .clans-page {
+                padding: 25px;
+            }
+
+            .clan-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .clan-actions {
+                align-items: flex-start;
+                gap: 15px;
+                flex-direction: column;
+            }
+        }
+    </style>
+    <script>document.documentElement.classList.add('js')</script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;700;800;900&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#05060a">
+    <link rel="stylesheet" href="/theme.css">
+</head>
+
+<body>
+
+<div class="bg-glow"></div>
+
+<aside class="sidebar" id="sidebar">
+
+    <a class="brand" href="/" aria-label="VYRE.MN">
+        <span class="brand-mark">V</span>
+        <span class="brand-word"><span>VYRE</span><b>.MN</b></span>
+    </a>
+
+    <div class="brand-line"></div>
+
+    <nav>
+        <a class="nav-item" href="/"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg></span><span class="lbl">HOME</span></a>
+        <a class="nav-item" href="/servers"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><path d="M7 7h.01M7 17h.01"/></svg></span><span class="lbl">SERVERS</span></a>
+        <a class="nav-item" href="/skins"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 6-9 14L3 8z"/><path d="M3 8h18M12 2v20M8 8l4 14 4-14"/></svg></span><span class="lbl">SKINCHANGER</span></a>
+        <a class="nav-item" href="/leaderboard"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v5a5 5 0 01-10 0z"/><path d="M7 6H4v2a3 3 0 003 3M17 6h3v2a3 3 0 01-3 3M12 14v4M8 21h8M10 18h4"/></svg></span><span class="lbl">LEADERBOARD</span></a>
+        <a class="nav-item" href="/players"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><path d="M16 4.6a3.5 3.5 0 010 6.8M18.5 14.4c1.9.8 3 2.7 3 5.6"/></svg></span><span class="lbl">PLAYERS</span></a>
+        <a class="nav-item active" href="/clans" aria-current="page"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.5l8 3v6c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10v-6z"/><path d="M9 12l2.2 2.2L15.5 10"/></svg></span><span class="lbl">CLANS</span></a>
+        <a class="nav-item" href="/discord" target="_blank" rel="noopener noreferrer"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16a1 1 0 011 1v10a1 1 0 01-1 1h-8l-5 4v-4H4a1 1 0 01-1-1V6a1 1 0 011-1z"/><path d="M8 10h.01M12 10h.01M16 10h.01"/></svg></span><span class="lbl">DISCORD</span></a>
+        <a class="nav-item" href="/profile"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7"/></svg></span><span class="lbl">PROFILE</span></a>
+    </nav>
+
+    <div class="sidebar-bottom">
+
+        <div class="system-status">
+            <i></i>
+            <div>
+                <strong>VYRE NETWORK</strong>
+                <small>ONLINE</small>
+            </div>
+        </div>
+
+        <button class="steam-login" type="button" onclick="steamLogin()">
+            <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9.5"/><circle cx="15.5" cy="9.5" r="2.5"/><path d="M3 12.6l5.2 2.1M9.5 17a2 2 0 100-4 2 2 0 000 4z"/></svg></span>
+            <b class="steam-label">STEAM LOGIN</b>
+        </button>
+
+    </div>
+
+</aside>
+
+
+<main class="main">
+
+    <header class="topbar">
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Menu" aria-controls="sidebar" aria-expanded="false"><span></span><span></span><span></span></button>
+
+        <div>
+            <span class="top-live"></span>
+            MONGOLIA
+        </div>
+
+        <div>
+            26 SERVERS ONLINE
+        </div>
+
+    </header>
+
+
+    <section class="clans-page">
+
+        <div class="page-header">
+
+            <div class="eyebrow">
+                VYRE COMMUNITY
+            </div>
+
+            <h1>
+                CLAN <span>NETWORK</span>
+            </h1>
+
+            <p>
+                Discover and join clans from the VYRE.MN community.
+            </p>
+
+        </div>
+
+
+        <div class="clan-actions">
+
+            <div class="clan-count">
+                0 CLANS REGISTERED
+            </div>
+
+            <button
+                class="create-clan"
+                onclick="createClan()"
+            >
+                + CREATE CLAN
+            </button>
+
+        </div>
+
+
+        <div class="clan-grid" id="clanGrid">
+
+            <div class="empty-clans">
+
+                <strong>
+                    NO CLANS YET
+                </strong>
+
+                Create the first VYRE.MN clan.
+
+            </div>
+
+        </div>
+
+    </section>
+
+</main>
+
+
+<script>
+
+function createClan() {
+
+    alert(
+        "Steam Login is required to create a clan."
+    );
+
+}
+
+</script>
+
+<script src="/auth.js"></script>
+<script src="/fx.js" defer></script>
+</body>
+</html>
