@@ -1,0 +1,41 @@
+/* VYRE.MN v3: bolder look, loaded after vyre26.css */
+:root{ --red:#ff3b5c; --blue:#4d8dff; --lime:#c6ff3d; }
+/* dot grid + top neon line */
+body::before{ content:""; position:fixed; inset:0; z-index:-1; pointer-events:none; opacity:.55;
+  background-image:radial-gradient(rgba(255,255,255,.09) 1px,transparent 1.2px); background-size:28px 28px;
+  -webkit-mask-image:radial-gradient(70% 60% at 50% 30%,#000,transparent 80%); mask-image:radial-gradient(70% 60% at 50% 30%,#000,transparent 80%); }
+.main::before{ content:""; position:fixed; left:0; right:0; top:0; height:2px; z-index:60; pointer-events:none;
+  background:linear-gradient(90deg,transparent,var(--red),var(--blue),transparent); background-size:200% 100%; animation:flow 4s linear infinite; }
+@keyframes flow{ to{ background-position:200% 0; } }
+
+/* bigger, bolder, neon type */
+.hero-title{ font-size:clamp(4rem,13vw,12rem); text-shadow:0 0 80px rgba(77,141,255,.25); }
+.hero-title .outline>span{ -webkit-text-stroke:2px rgba(255,255,255,.7); color:transparent; transition:-webkit-text-stroke-color .4s, text-shadow .4s; }
+.hero-title:hover .outline>span{ -webkit-text-stroke-color:var(--red); text-shadow:0 0 50px rgba(255,59,92,.6); }
+.page-header h1,.skin-header h1,.srv-head h1{ font-size:clamp(2.6rem,6vw,5.4rem); font-weight:800; }
+
+/* cards: bigger radius, inner cursor spotlight (vyre27.js sets --mx --my), neon hover */
+.feature-card,.srv-card,.clan-card,.skin-card,.wcard,.stat-box,.profile-panel,.admin-card,.steam-box{ border-radius:28px; position:relative; isolation:isolate; }
+.feature-card::after,.srv-card::after,.clan-card::after,.skin-card::after,.wcard::after{ content:""; position:absolute; inset:0; border-radius:inherit; z-index:-1; pointer-events:none; opacity:0; transition:opacity .35s;
+  background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.10),transparent 65%); }
+.feature-card:hover::after,.srv-card:hover::after,.clan-card:hover::after,.skin-card:hover::after,.wcard:hover::after{ opacity:1; }
+.srv-card:hover,.skin-card:hover,.wcard:hover,.clan-card:hover,.feature-card:hover{ box-shadow:0 30px 80px -30px rgba(77,141,255,.55),0 0 0 1px rgba(255,255,255,.04); }
+
+/* live dots + online glow */
+.srv-status.online::before,.system-status .dot{ box-shadow:0 0 0 0 rgba(53,224,138,.6); animation:live 1.8s infinite; }
+@keyframes live{ 70%{ box-shadow:0 0 0 10px rgba(53,224,138,0); } 100%{ box-shadow:0 0 0 0 rgba(53,224,138,0); } }
+
+/* sidebar brand + active item neon bar */
+.brand-text,.brand strong{ background:linear-gradient(90deg,#fff,var(--blue),var(--red)); background-size:200% 100%; -webkit-background-clip:text; background-clip:text; color:transparent; animation:flow 6s linear infinite; }
+.nav-item.active::before{ width:4px; background:linear-gradient(var(--red),var(--blue)); box-shadow:0 0 18px var(--red); border-radius:99px; }
+
+/* scroll progress (bottom of the sticky top line) */
+.v27-prog{ position:fixed; left:0; top:0; height:3px; width:100%; z-index:70; transform-origin:left; transform:scaleX(0); pointer-events:none;
+  background:linear-gradient(90deg,var(--red),var(--blue),var(--lime)); box-shadow:0 0 14px var(--blue); }
+@supports (animation-timeline:scroll()){ .v27-prog{ animation:prog linear both; animation-timeline:scroll(root); } @keyframes prog{ to{ transform:scaleX(1); } } }
+
+/* inputs + tables */
+input,select,textarea{ border-radius:16px; }
+th{ letter-spacing:.14em; text-transform:uppercase; font-size:.72rem; color:var(--muted); }
+tbody tr:hover td:first-child{ box-shadow:inset 3px 0 0 var(--red); }
+@media(prefers-reduced-motion:reduce){ .main::before,.brand-text,.brand strong,.v27-prog{ animation:none !important; } }
