@@ -1,0 +1,116 @@
+/* VYRE.MN — site-wide polish layer (loaded last on every page) */
+::selection{ background:rgba(255,51,71,.45); color:#fff; }
+:focus-visible{ outline:2px solid var(--blue); outline-offset:3px; border-radius:8px; }
+html{ scroll-behavior:smooth; }
+
+/* aurora behind every page */
+body::after{ content:""; position:fixed; inset:0; z-index:-1; pointer-events:none;
+  background:radial-gradient(40% 40% at 90% 0%,rgba(47,123,255,.12),transparent 70%),radial-gradient(35% 40% at 0% 100%,rgba(255,51,71,.10),transparent 70%); }
+
+/* sidebar */
+.sidebar{ background:linear-gradient(180deg,rgba(14,18,29,.92),rgba(7,9,15,.96)); -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px); }
+.brand-mark{ background:linear-gradient(135deg,var(--red),var(--blue)); box-shadow:0 0 28px rgba(255,51,71,.45),0 0 40px rgba(47,123,255,.3); }
+.brand-line{ height:1px; background:linear-gradient(90deg,transparent,var(--line-2),transparent); }
+.nav-item{ border-radius:12px; }
+.nav-item.active{ background:linear-gradient(90deg,rgba(255,51,71,.16),rgba(47,123,255,.05)); box-shadow:inset 0 0 0 1px rgba(255,51,71,.22); }
+.system-status{ border-radius:14px; border:1px solid var(--line); background:rgba(255,255,255,.03); }
+.steam-login{ border-radius:14px; background:linear-gradient(135deg,rgba(47,123,255,.2),rgba(255,51,71,.14)); border:1px solid var(--line-2); transition:box-shadow .3s, border-color .3s; }
+.steam-login:hover{ border-color:var(--blue); box-shadow:0 0 30px rgba(47,123,255,.35); }
+.topbar{ background:rgba(6,8,13,.72); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border-bottom:1px solid var(--line); }
+
+/* page headings with a gradient underline */
+.page-header h1,.skin-header h1,.srv-head h1,.admin-header h1{ background:linear-gradient(180deg,#fff 40%,#98a2b8); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.page-header h1 span{ -webkit-text-fill-color:transparent; }
+
+/* shared glass surfaces */
+.srv-card,.clan-card,.profile-panel,.admin-card,.stat-box,.skin-panel,.steam-box,.players-table,.leaderboard-table,.table-wrap{
+  background:linear-gradient(160deg,rgba(255,255,255,.055),rgba(255,255,255,.012)); border:1px solid var(--line); border-radius:22px;
+  box-shadow:0 20px 50px -24px rgba(0,0,0,.7); }
+.srv-card,.clan-card,.stat-box{ transition:transform .4s var(--ease), border-color .3s, box-shadow .4s; }
+.srv-card:hover,.clan-card:hover{ transform:translateY(-6px); border-color:rgba(47,123,255,.4); box-shadow:0 28px 60px -20px rgba(0,0,0,.8),0 0 40px rgba(47,123,255,.12); }
+
+/* servers */
+.srv-tabs{ gap:8px; }
+.srv-tab{ border-radius:999px; border:1px solid var(--line); background:rgba(255,255,255,.03); transition:all .3s var(--ease); }
+.srv-tab:hover{ border-color:var(--line-2); transform:translateY(-2px); }
+.srv-tab.active{ background:linear-gradient(90deg,var(--red),#c2185b 55%,var(--blue)); border-color:transparent; color:#fff; box-shadow:0 10px 30px -8px rgba(255,51,71,.6); }
+.srv-play{ border-radius:12px; background:linear-gradient(90deg,var(--red),var(--blue)); background-size:160% 100%; transition:background-position .5s, transform .25s, box-shadow .3s; }
+.srv-play:hover{ background-position:100% 0; transform:translateY(-2px); box-shadow:0 12px 30px -8px rgba(47,123,255,.7); }
+.srv-bar{ border-radius:99px; overflow:hidden; background:rgba(255,255,255,.08); }
+.srv-status.online{ color:var(--green); text-shadow:0 0 12px rgba(53,224,138,.6); }
+
+/* tables: leaderboard + players + admin */
+.leaderboard-table,.players-table,.table-wrap{ overflow:hidden; }
+.leaderboard-table tr,.players-table tr,.server-row{ transition:background .25s; }
+.leaderboard-table tbody tr:hover,.players-table tbody tr:hover,.server-row:hover{ background:linear-gradient(90deg,rgba(255,51,71,.08),rgba(47,123,255,.05)); }
+.position,.rank{ font-family:var(--display); font-weight:800; }
+.score{ font-family:var(--display); background:linear-gradient(90deg,var(--red),var(--blue)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.search-box,.skin-search,.players-tools input,.select{ border-radius:14px; background:rgba(255,255,255,.04); border:1px solid var(--line); transition:border-color .3s, box-shadow .3s; }
+.search-box:focus-within,.skin-search:focus-within,.select:focus{ border-color:var(--blue); box-shadow:0 0 0 4px rgba(47,123,255,.15); }
+
+/* clans */
+.create-clan,.btn,.save,.steam-login-btn,.clear-btn{ border-radius:14px; }
+.clan-count{ font-family:var(--display); background:linear-gradient(90deg,var(--red),var(--blue)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.empty,.empty-clans,.srv-empty{ border:1px dashed var(--line-2); border-radius:20px; background:rgba(255,255,255,.02); }
+
+/* skins */
+.team-filter button,.team-filter .btn{ border-radius:999px; }
+.sel-bar{ background:rgba(8,10,17,.85); -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px); border-top:1px solid var(--line-2); box-shadow:0 -20px 50px rgba(0,0,0,.5); }
+.skin-card,.wcard{ border-radius:20px; transition:transform .4s var(--ease), border-color .3s, box-shadow .4s; }
+
+/* profile + admin stats */
+.profile-stats .stat-card,.stat-box{ border-radius:20px; }
+.stat-value,.stat-number{ background:linear-gradient(90deg,#fff,#9fb4ff); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.panel-head,.card-header{ border-bottom:1px solid var(--line); }
+.profile-rank{ box-shadow:0 0 30px rgba(255,200,61,.18); }
+.side-item{ border-radius:12px; transition:background .25s, transform .25s; }
+.side-item:hover{ background:rgba(255,255,255,.05); transform:translateX(3px); }
+
+/* steam login page */
+.steam-page{ background:radial-gradient(50% 60% at 50% 40%,rgba(47,123,255,.2),transparent 70%); }
+.steam-box{ padding:clamp(30px,5vw,56px); text-align:center; border-radius:28px; }
+.steam-icon{ filter:drop-shadow(0 0 24px rgba(47,123,255,.6)); animation:idle 5s ease-in-out infinite; }
+.steam-login-btn{ background:linear-gradient(90deg,var(--blue-deep),var(--blue)); }
+.back-link{ color:var(--muted); transition:color .25s, letter-spacing .3s var(--ease); }
+.back-link:hover{ color:#fff; letter-spacing:.06em; }
+
+/* footer */
+footer{ border-top:1px solid var(--line); background:linear-gradient(180deg,transparent,rgba(47,123,255,.05)); }
+footer strong{ font-family:var(--display); }
+footer strong span{ background:linear-gradient(90deg,var(--red),var(--blue)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+@media(prefers-reduced-motion:reduce){ html{ scroll-behavior:auto; } .steam-icon{ animation:none; } .srv-card:hover,.clan-card:hover{ transform:none; } }
+
+/* ---------- sidebar menu: cursor-reactive (works with nav-fx.js) ---------- */
+.sidebar nav{ position:relative; }
+.nav-item{ overflow:hidden; }
+.nav-item::after{ content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; opacity:0; transition:opacity .3s;
+  background:radial-gradient(120px circle at var(--mx,50%) var(--my,50%),rgba(47,123,255,.28),rgba(255,51,71,.10) 55%,transparent 75%); }
+.nav-item:hover::after{ opacity:1; }
+.nav-item .lbl{ transition:letter-spacing .35s var(--ease), transform .35s var(--ease); }
+.nav-item:hover .lbl{ letter-spacing:.16em; }
+.nav-item .ico{ transition:transform .35s var(--ease), color .25s, filter .3s; }
+.nav-item:hover .ico{ color:var(--blue); filter:drop-shadow(0 0 8px rgba(47,123,255,.8)); transform:scale(1.18) rotate(-6deg); }
+.nav-item.active:hover .ico{ color:var(--red); filter:drop-shadow(0 0 8px rgba(255,51,71,.8)); }
+.nav-item.active::before{ left:0; }
+.nav-glider{ position:absolute; left:0; right:0; top:0; height:0; border-radius:12px; pointer-events:none; opacity:0; z-index:0;
+  background:linear-gradient(90deg,rgba(255,51,71,.14),rgba(47,123,255,.12)); border:1px solid var(--line-2);
+  transition:transform .35s var(--ease), height .35s var(--ease), opacity .25s; }
+.sidebar nav.glide .nav-glider{ opacity:1; }
+.nav-item>*{ position:relative; z-index:1; }
+@media(prefers-reduced-motion:reduce){ .nav-glider{ transition:none; } .nav-item:hover .ico{ transform:none; } }
+
+/* ---------- hero crosshair: ring + dot + trailing glow, turns blue over buttons ---------- */
+.hero,.hero a,.hero button{ cursor:none; }
+.xhair{ width:56px; height:56px; margin:-28px 0 0 -28px; border-radius:50%;
+  border:1.5px solid rgba(255,51,71,.55);
+  background:radial-gradient(circle,#fff 0 2px,transparent 2.5px),radial-gradient(circle,rgba(255,51,71,.22),transparent 68%);
+  box-shadow:0 0 24px rgba(255,51,71,.35), inset 0 0 18px rgba(255,51,71,.18);
+  transition:opacity .3s, width .3s var(--ease), height .3s var(--ease), margin .3s var(--ease), border-color .3s, box-shadow .3s; }
+.xhair::before,.xhair::after{ background:linear-gradient(var(--xc,var(--red)),var(--xc,var(--red))); }
+.xhair::before{ top:-9px; height:calc(100% + 18px); }
+.xhair::after{ left:-9px; width:calc(100% + 18px); }
+.xhair.lock{ --xc:var(--blue); width:76px; height:76px; margin:-38px 0 0 -38px; border-color:rgba(47,123,255,.8);
+  background:radial-gradient(circle,#fff 0 2px,transparent 2.5px),radial-gradient(circle,rgba(47,123,255,.28),transparent 68%);
+  box-shadow:0 0 34px rgba(47,123,255,.55), inset 0 0 22px rgba(47,123,255,.25); }
+@media(hover:none){ .hero,.hero a,.hero button{ cursor:auto; } }
